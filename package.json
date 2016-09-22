@@ -1,0 +1,29 @@
+{
+  "name": "basic-express",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --compilers js:babel-register",
+    "test-cov": "istanbul cover _mocha -- --compilers js:babel-register",
+    "babel": "babel src -d lib",
+    "start": "node lib/server.js",
+    "prof": "NODE_ENV=production node --prof lib/server.js",
+    "prof-parse": "node --prof-process isolate-0x102004a00-v8.log > log.txt"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babel-preset-es2015-node4": "^2.1.0",
+    "babel-register": "^6.14.0",
+    "babylon": "^6.11.1",
+    "escodegen": "^1.8.1",
+    "esprima": "^3.0.0",
+    "express": "^4.14.0",
+    "istanbul": "^1.1.0-alpha.1",
+    "mocha": "^3.0.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.14.0"
+  }
+}
