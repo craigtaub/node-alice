@@ -9,7 +9,8 @@
     "babel": "babel src -d lib",
     "start": "node lib/server.js",
     "prof": "NODE_ENV=production node --prof lib/server.js",
-    "prof-parse": "node --prof-process isolate-0x102004a00-v8.log > log.txt"
+    "prof-parse": "node --prof-process isolate-0x102004a00-v8.log > log.txt",
+    "babel-node": "babel-node src/server.js"
   },
   "author": "",
   "license": "ISC",

@@ -17,6 +17,16 @@ static analysis?
 
 ===
 
+
+== plugin
+npm link                    
+# creates global link
+
+npm link babel-plugin-craig-test              
+# link-install the package
+==
+
+
 == Process:
 at runtime (for a request):
 via a hook. build AST. parse into html file.
