@@ -1,5 +1,6 @@
 import express from 'express';
 const router = express.Router();
+import calculation from './calculation';
 
 function myFile() {
   console.log('ran myfile');
@@ -11,8 +12,8 @@ var tree = myFile();
 console.log(tree);
 
 router.get('/', function(req, res) {
-    var tree = myFile();
-    console.log(tree);
+    var total = calculation();
+    console.log(total);
     res.send('hello world');
 });
 

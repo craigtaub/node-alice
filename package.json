@@ -6,11 +6,11 @@
   "scripts": {
     "test": "mocha --compilers js:babel-register",
     "test-cov": "istanbul cover _mocha -- --compilers js:babel-register",
-    "babel": "babel src -d lib",
-    "start": "node lib/server.js",
-    "prof": "NODE_ENV=production node --prof lib/server.js",
-    "prof-parse": "node --prof-process isolate-0x102004a00-v8.log > log.txt",
-    "babel-node": "babel-node src/server.js"
+    "babel-basic": "babel src -d lib",
+    "prof-file-builder": "NODE_ENV=production node --prof lib/server.js",
+    "prof-file-parser": "node --prof-process isolate-0x102004a00-v8.log > log.txt",
+    "babel-plugin": "babel-node src/server.js",
+    "require-hook": "node lib/index.js"
   },
   "author": "",
   "license": "ISC",

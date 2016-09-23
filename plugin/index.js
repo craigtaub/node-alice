@@ -1,20 +1,20 @@
-// module.exports = function ({ types: t }) {
-export default function () {
+ module.exports = function ({ types: t }) {
+//export default function ({types: t}) {
 	console.log('plugin');
 	return {
 		visitor: {
 			FunctionDeclaration(path) {
 				path.insertBefore(t.expressionStatement(t.stringLiteral("console.log('hello')")));
-				console.log('state');
+				// console.log('state');
 			},
 			ReturnStatement(path) {
-				console.log('path');
+				// console.log('path');
 			},
 			CallExpression: function(path, file) {
-				console.log('path');
+				// console.log('path');
 			},
 			Identifier(path) {
-			    console.log("Visiting: " + path.node.name);
+			    // console.log("Visiting: " + path.node.name);
 			 }
             // FunctionDeclaration(path) {
             //     path.insertBefore(t.expressionStatement(t.stringLiteral("console.log('hello')")));

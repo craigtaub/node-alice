@@ -18,13 +18,12 @@ static analysis?
 ===
 
 
-== plugin
-npm link                    
-# creates global link
+== developing off parsed AST
+code into http://esprima.org/demo/parse.html
+paste AST object and play with appending on babeljs.io/repl/
 
-npm link babel-plugin-craig-test              
-# link-install the package
 ==
+
 
 
 == Process:
@@ -93,6 +92,16 @@ require.extensions['.js'] = function (mod, filename) {
 }
 ===
 
+
+
+
+== plugin linking
+npm link                    
+# creates global link
+
+npm link babel-plugin-craig-test              
+# link-install the package
+==
 
 
 === Babel CLI:
