@@ -1,3 +1,6 @@
+
+run: node lib/index.js
+
 == what?
 PRODUCT:
 - run a request, creates html page with diagram of files + code within that file.
