@@ -1,6 +1,5 @@
 {
     "presets": [
         "es2015-node4"
-    ],
-    "plugins": ["./plugin/index.js"]
+    ]
 }

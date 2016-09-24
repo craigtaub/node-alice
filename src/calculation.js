@@ -1,4 +1,3 @@
-
 export default function calculation() {
     var one = 1;
     var two = 2;

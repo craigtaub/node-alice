@@ -17,13 +17,20 @@ static analysis?
 
 ===
 
+== Notes:
+- iterate over original value, not new...as writing to new and messes up forEach.
+
+
+==
 
 == TODO:
--- high
+- write to global and shutdown handler writes to file.
+-- http://stackoverflow.com/questions/8510008/express-js-shutdown-hook
+
 - make cli tool - DONE...node analyse.js my-entry-file.js
 -- could improve into 'analyse my-entry-file.js' creating node-cli package.
 
-- allow ES6 (espirma works for ES6)
+- allow ES6 (espirma works for ES6) - DONE
 -- work with es6 espress?
 -- might need some updates for exports/imports etc but should work
 --
@@ -33,6 +40,7 @@ static analysis?
 -- modules (import not needed, just code inside export)
 -- function calls. e.g. guy()
 -- nested: all
+-- functions e.g. with assigns or if's need to not be added in 1 blob, need individual items
 
 - allow recursive checks of ALL types...For nested.
 i.e. can hand object prop into function checking for IF, EXPORT, etc...
@@ -40,6 +48,7 @@ i.e. can hand object prop into function checking for IF, EXPORT, etc...
 - Dont print if is nested
 --
 ==
+
 
 == developing off parsed AST
 code into http://esprima.org/demo/parse.html
@@ -128,6 +137,9 @@ npm link babel-plugin-craig-test
 # link-install the package
 ==
 
+== plugin, locally in .babelrc
+,"plugins": ["./plugin/index.js"]
+===
 
 === Babel CLI:
 #babel index.js --out-file app.js

@@ -1,19 +1,20 @@
 import express from 'express';
-const router = express.Router();
 import calculation from './calculation';
 
-function myFile() {
-  console.log('ran myfile');
+const router = express.Router();
 
-  return 'tree';
-}
+// function myFile() {
+//   console.log('ran myfile');
+//
+//   return 'tree';
+// }
 
-var tree = myFile();
-console.log(tree);
+// var tree = myFile();
+// console.log(tree);
 
 router.get('/', function(req, res) {
     var total = calculation();
-    console.log(total);
+    // console.log(total);
     res.send('hello world');
 });
 
