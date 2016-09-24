@@ -19,8 +19,7 @@ static analysis?
 
 == Notes:
 - iterate over original value, not new...as writing to new and messes up forEach.
-
-
+- what splice need keys to follow (real location after instrumenting): 0==0, 1==2, 2==4
 ==
 
 == TODO:
