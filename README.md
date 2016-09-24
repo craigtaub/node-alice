@@ -20,7 +20,8 @@ static analysis?
 
 == TODO:
 -- high
-- make cli usage (tool)
+- make cli tool - DONE...node analyse.js my-entry-file.js
+-- could improve into 'analyse my-entry-file.js' creating node-cli package.
 
 - allow ES6 (espirma works for ES6)
 -- work with es6 espress?
@@ -29,9 +30,9 @@ static analysis?
 
 --- low priority..i know its possible
 - fix
--- if...needs to show condition
--- function calls
--- nested: assignment
+-- modules (import not needed, just code inside export)
+-- function calls. e.g. guy()
+-- nested: all
 
 - allow recursive checks of ALL types...For nested.
 i.e. can hand object prop into function checking for IF, EXPORT, etc...
