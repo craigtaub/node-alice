@@ -18,10 +18,34 @@ static analysis?
 ===
 
 
+== TODO:
+-- high
+- make cli usage (tool)
+
+- allow ES6 (espirma works for ES6)
+-- work with es6 espress?
+-- might need some updates for exports/imports etc but should work
+--
+
+--- low priority..i know its possible
+- fix
+-- if...needs to show condition
+-- function calls
+-- nested: assignment
+
+- allow recursive checks of ALL types...For nested.
+i.e. can hand object prop into function checking for IF, EXPORT, etc...
+
+- Dont print if is nested
+--
+==
+
 == developing off parsed AST
 code into http://esprima.org/demo/parse.html
+- put statement in so can see where it should be appended dynamically.
 paste AST object and play with appending on babeljs.io/repl/
 
+SHOULD be checking for 'type' first.
 ==
 
 
