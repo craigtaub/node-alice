@@ -6,6 +6,7 @@
   "scripts": {
     "test": "mocha --compilers js:babel-register",
     "test-cov": "istanbul cover _mocha -- --compilers js:babel-register",
+    "istanbul-instrument": "istanbul instrument lib/ -o test-intrument/",
     "babel-basic": "babel src -d lib",
     "prof-file-builder": "NODE_ENV=production node --prof lib/server.js",
     "prof-file-parser": "node --prof-process isolate-0x102004a00-v8.log > log.txt",

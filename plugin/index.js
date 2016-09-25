@@ -4,7 +4,7 @@
 	return {
 		visitor: {
 			FunctionDeclaration(path) {
-        console.log(path)
+        console.log('path')
 				// path.insertBefore(t.expressionStatement(t.stringLiteral("console.log('hello')")));
 				// console.log('state');
 			},

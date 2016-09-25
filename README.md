@@ -20,11 +20,14 @@ static analysis?
 == Notes:
 - iterate over original value, not new...as writing to new and messes up forEach.
 - what splice need keys to follow (real location after instrumenting): 0==0, 1==2, 2==4
+- nested only needs to work for each file as require-hook will treat each file/dep as top level.
 ==
 
 == TODO:
+- find something to help instrumenting...flexible instrument but write when their does.
+-- tried istanbul commands, hooks + babel plugins...nothing
+
 - write to global and shutdown handler writes to file.
--- http://stackoverflow.com/questions/8510008/express-js-shutdown-hook
 
 - make cli tool - DONE...node analyse.js my-entry-file.js
 -- could improve into 'analyse my-entry-file.js' creating node-cli package.
@@ -52,7 +55,9 @@ i.e. can hand object prop into function checking for IF, EXPORT, etc...
 == developing off parsed AST
 code into http://esprima.org/demo/parse.html
 - put statement in so can see where it should be appended dynamically.
-paste AST object and play with appending on babeljs.io/repl/
+
+http://babeljs.io/repl/
+- paste AST object and play with appending
 
 SHOULD be checking for 'type' first.
 ==
@@ -71,6 +76,13 @@ SO:
 how do unit tests do it? does each unit test run completely fresh?
 each unit test much run everything??
 ==
+
+
+
+== Require hook:
+what istanbul + babel rely on. Hook into all file opens, transform into require cache, so when its run it runs transformed code.
+===
+
 
 == Istanbul notes
 "Module loader hooks to instrument code on the fly."
@@ -98,6 +110,7 @@ Escope https://github.com/estools/escope can parse AST (code generator):
 - can it do it at runtime? only build-time. ????
 ===
 
+
 == Istanbul hook
 http://gotwarlost.github.io/istanbul/public/apidocs/classes/Hook.html
 - hookRequire "hooks `require` to return transformed code to the node module loader."
@@ -106,39 +119,26 @@ http://gotwarlost.github.io/istanbul/public/apidocs/classes/Hook.html
 ===
 
 
-== Require hook:
-// grab old .js ext function
-var oldHook = require.extensions['.js'];
-// set new .js ext function to X
-require.extensions['.js'] = function (mod, filename) {
-  var oldCompile = mod._compile;
-  // cache the actual compile implementation
+=== Istanbul instrument command
+#istanbul instrument lib/ -o test-intrument/
+instruments file/folder into new file/folder. need to execute after.
+works but need options to specify intrumenting into what, does it to coverage-like
 
-  mod._compile = function (code, filename) {
-    // re-compile code based on something here.
-    // ..
-    oldCompile.call(mod, code, filename);
-    // compile again
-  }
-  // now run old function
-  oldHook(mod, filename);
-}
+can change --variable and --hook-run-in-context but doesnt help.
+==
+
+
+== babel plugin, locally in .babelrc
+,"plugins": ["./plugin/index.js"]
 ===
 
-
-
-
-== plugin linking
+== plugin linking (not needed)
 npm link                    
 # creates global link
 
 npm link babel-plugin-craig-test              
 # link-install the package
 ==
-
-== plugin, locally in .babelrc
-,"plugins": ["./plugin/index.js"]
-===
 
 === Babel CLI:
 #babel index.js --out-file app.js
