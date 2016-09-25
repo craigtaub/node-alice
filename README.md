@@ -27,7 +27,10 @@ static analysis?
 - find something to help instrumenting...flexible instrument but write when their does.
 -- tried istanbul commands, hooks + babel plugins...nothing
 
-- write to global and shutdown handler writes to file.
+- parse json file and write to html with js to expand/collapse
+
+- write to global and shutdown handler writes to file - DONE
+-- using 'close' and 'exit' both dont run if user terminates..must be SIGTERM
 
 - make cli tool - DONE...node analyse.js my-entry-file.js
 -- could improve into 'analyse my-entry-file.js' creating node-cli package.

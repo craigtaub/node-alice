@@ -1,5 +1,7 @@
 var esprima = require('esprima');
 var escodegen = require('escodegen');
+var reportGenerator = require('./analysis-parser');
+var currentDirectory = __dirname;
 
 function requireHook() {
   var oldHook = require.extensions['.js'];
@@ -21,16 +23,43 @@ function requireHook() {
 requireHook();
 
 var writeFile = function(jsonBlob) {
+  // var reportGenerator = require(__dirname + '/analysis-parser');
+  // console.log(jsonBlob)
+  // writeHtml(jsonBlob);
+  // reportGenerator.default(jsonBlob);
   var fs = require('fs');
 
-  jsonBlob = {data: jsonBlob};
+  var body = '';
 
-  fs.writeFileSync(__dirname + '/analysis.json', JSON.stringify(jsonBlob));
+  for (var key in jsonBlob) {
+      body+= '<div>';
+      body+= '<p>Filename: ' + key + '</p>';
+      jsonBlob[key].forEach(function(value, key) {
+        body+= '<p>Contents: ' + value + '</p>';
+      });
+
+      body+= '</div>';
+  };
+
+  fs.writeFileSync(currentDirectory + '/analysis.html', buildHtml(body));
+
+
+  function buildHtml(body) {
+    var header = 'Some Header';
+
+    return '<!DOCTYPE html>'
+         + '<html><header>' + header + '</header><body>' + body + '</body></html>';
+  };
 }
 
 function printThis(filename, ranInner) {
-    var pushToStore = 'globalStore.push({"'+ filename + '":' + JSON.stringify(ranInner.toString()) + '});';
-    return esprima.parse(pushToStore + 'console.log(\'the middle\' , "' + filename + '" , ' + JSON.stringify(ranInner.toString()) + ' )');
+    var pushToStore = 'if (globalStore["'+ filename + '"]) {';
+    pushToStore+= 'globalStore["'+ filename + '"].push(' + JSON.stringify(ranInner.toString()) + ');';
+    pushToStore+= '} else { ';
+    pushToStore+= 'globalStore["'+ filename + '"] = [' + JSON.stringify(ranInner.toString()) + ']';
+    pushToStore+= '}';
+    // return esprima.parse(pushToStore + 'console.log(\'the middle\' , "' + filename + '" , ' + JSON.stringify(ranInner.toString()) + ' )');
+    return esprima.parse(pushToStore); // no console.log
 }
 
 function transform(srcCode, filename) {
@@ -41,7 +70,7 @@ function transform(srcCode, filename) {
   // console.log(parsed);
   var newParsed = Object.assign({}, parsed);
   newParsed.body = [
-    esprima.parse('var writeFile=' + writeFile + '; var globalStore = []; process.on(\'exit\', function() { writeFile(globalStore) });')
+    esprima.parse('var writeFile=' + writeFile + '; var currentDirectory="' + currentDirectory + '"; var globalStore = {}; process.on(\'SIGINT\', function() {  writeFile(globalStore) });')
   ];
   // newParsed.body = [];
   parsed.body.forEach(function(value, key) {
@@ -50,8 +79,8 @@ function transform(srcCode, filename) {
       var hasNested = false;
 
       // only print this if none of others have anything. I THINK
-      //globalStore.push({"main":"tree"});
-  		newParsed.body.push(esprima.parse('console.log(\'the MAIN middle\' , "' + filename + '" , ' + JSON.stringify(ranOne.toString()) + ' )'));
+  		// newParsed.body.push(esprima.parse('console.log(\'the MAIN middle\' , "' + filename + '" , ' + JSON.stringify(ranOne.toString()) + ' )'));
+      newParsed.body.push(esprima.parse('')); // no console.log
       newParsed.body.push(value);
 
       var run = (newParsed.body.length-1)/2; // -1 as added globalStore
@@ -234,13 +263,11 @@ function transform(srcCode, filename) {
           // newParsed.body.push(esprima.parse('console.log(\'the middle\' , "' + filename + '" , ' + JSON.stringify(ranOne.toString()) + ' )'));
       // }
   });
-  // console.log(newParsed);
+
   var newlyGeneratedCode = escodegen.generate(newParsed);
-  // console.log(newlyGeneratedCode);
+
   return newlyGeneratedCode;
 }
 
 var file = process.argv[2]
 require(file);
-// require('./test');
-// require('./server');

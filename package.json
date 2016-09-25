@@ -11,7 +11,8 @@
     "prof-file-builder": "NODE_ENV=production node --prof lib/server.js",
     "prof-file-parser": "node --prof-process isolate-0x102004a00-v8.log > log.txt",
     "babel-plugin": "babel-node src/server.js",
-    "require-hook": "node lib/index.js"
+    "require-hook": "node lib/index.js",
+    "node-alice": "babel-node ./alice.js ./src/server"
   },
   "author": "",
   "license": "ISC",
