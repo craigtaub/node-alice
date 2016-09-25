@@ -18,16 +18,20 @@ static analysis?
 ===
 
 == Notes:
+- stores via SINGLETON as each file got own global={}
 - iterate over original value, not new...as writing to new and messes up forEach.
 - what splice need keys to follow (real location after instrumenting): 0==0, 1==2, 2==4
 - nested only needs to work for each file as require-hook will treat each file/dep as top level.
 ==
 
 == TODO:
-- find something to help instrumenting...flexible instrument but write when their does.
--- tried istanbul commands, hooks + babel plugins...nothing
+- get prototype working with routes+calculations all showing for that request...
 
-- parse json file and write to html with js to expand/collapse
+
+- parse json file and write to html with js to expand/collapse - HALF
+
+- find something to help instrumenting...flexible instrument but write when their does - NOPE
+-- tried istanbul commands, hooks + babel plugins...nothing
 
 - write to global and shutdown handler writes to file - DONE
 -- using 'close' and 'exit' both dont run if user terminates..must be SIGTERM

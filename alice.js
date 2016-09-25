@@ -1,17 +1,21 @@
 var esprima = require('esprima');
 var escodegen = require('escodegen');
-var reportGenerator = require('./analysis-parser');
+
 var currentDirectory = __dirname;
+
+var debugging = false;
 
 function requireHook() {
   var oldHook = require.extensions['.js'];
   require.extensions['.js'] = function (mod, filename) {
     var oldCompile = mod._compile;
     mod._compile = function (code, filename) {
-      if (!filename.match(/node_modules/)) {
+      if (!filename.match(/node_modules/) && !filename.match(/singleton/)) {
         var transformedCode = transform(code, filename);
 
-        // console.log(transformedCode); // VERY USEFUL
+        if (debugging) {
+            console.log(transformedCode); // VERY USEFUL
+        }
       } else {
         var transformedCode = code;
       }
@@ -23,11 +27,8 @@ function requireHook() {
 requireHook();
 
 var writeFile = function(jsonBlob) {
-  // var reportGenerator = require(__dirname + '/analysis-parser');
-  // console.log(jsonBlob)
-  // writeHtml(jsonBlob);
-  // reportGenerator.default(jsonBlob);
   var fs = require('fs');
+  // console.log('WRITE FILE', jsonBlob);
 
   var body = '';
 
@@ -53,13 +54,13 @@ var writeFile = function(jsonBlob) {
 }
 
 function printThis(filename, ranInner) {
-    var pushToStore = 'if (globalStore["'+ filename + '"]) {';
-    pushToStore+= 'globalStore["'+ filename + '"].push(' + JSON.stringify(ranInner.toString()) + ');';
-    pushToStore+= '} else { ';
-    pushToStore+= 'globalStore["'+ filename + '"] = [' + JSON.stringify(ranInner.toString()) + ']';
-    pushToStore+= '}';
-    // return esprima.parse(pushToStore + 'console.log(\'the middle\' , "' + filename + '" , ' + JSON.stringify(ranInner.toString()) + ' )');
-    return esprima.parse(pushToStore); // no console.log
+    if (debugging) {
+        return esprima.parse('console.log(\'the middle\' , "' + filename + '" , ' + JSON.stringify(ranInner.toString()) + ' )');
+    } else {
+        var pushToStore ='singleton.add("'+ filename+ '", '+ JSON.stringify(ranInner.toString()) +');';
+
+        return esprima.parse(pushToStore);
+    }
 }
 
 function transform(srcCode, filename) {
@@ -69,18 +70,26 @@ function transform(srcCode, filename) {
   });
   // console.log(parsed);
   var newParsed = Object.assign({}, parsed);
-  newParsed.body = [
-    esprima.parse('var writeFile=' + writeFile + '; var currentDirectory="' + currentDirectory + '"; var globalStore = {}; process.on(\'SIGINT\', function() {  writeFile(globalStore) });')
-  ];
-  // newParsed.body = [];
+
+  newParsed.body = [];
+  if (debugging) {
+    newParsed.body.push(esprima.parse(''));
+  } else {
+    //SIGINT
+    newParsed.body.push(esprima.parse('var writeFile=' + writeFile + '; var currentDirectory="' + currentDirectory + '"; var singleton = require(currentDirectory + \'/singleton\'); process.on(\'exit\', function() { writeFile(singleton.getAll()); process.exit(); }); '));
+  }
+
   parsed.body.forEach(function(value, key) {
       var ranOne = escodegen.generate(value);
 
       var hasNested = false;
 
       // only print this if none of others have anything. I THINK
-  		// newParsed.body.push(esprima.parse('console.log(\'the MAIN middle\' , "' + filename + '" , ' + JSON.stringify(ranOne.toString()) + ' )'));
-      newParsed.body.push(esprima.parse('')); // no console.log
+      if (debugging) {
+  		    newParsed.body.push(esprima.parse('console.log(\'the MAIN middle\' , "' + filename + '" , ' + JSON.stringify(ranOne.toString()) + ' )'));
+      } else {
+          newParsed.body.push(esprima.parse(''));
+      }
       newParsed.body.push(value);
 
       var run = (newParsed.body.length-1)/2; // -1 as added globalStore
@@ -151,7 +160,7 @@ function transform(srcCode, filename) {
         });
       }
 
-      // for function arguments e.g:
+      // for function arguments (e.g. callbacks) e.g:
       // get('/', function (req, res) {
       //     res.send('hello world');
       // });
@@ -159,8 +168,12 @@ function transform(srcCode, filename) {
         value.expression && value.expression.arguments) {
         value.expression.arguments.forEach(function(argValue, argKey) {
           if(argValue.body) {
+            // console.log('INSIDE');
             hasNested = true;
-            currentBody.expression.arguments[argKey].body.body.unshift(printThis(filename, ranOne));
+            var ranInner = escodegen.generate(argValue.body.body[0]);
+            // console.log('ran one: ' , ranOne);
+            currentBody.expression.arguments[argKey].body.body.unshift(printThis(filename, ranInner));
+            // console.log(escodegen.generate(currentBody.expression.arguments[argKey].body.body[0]));
           }
         });
       }
