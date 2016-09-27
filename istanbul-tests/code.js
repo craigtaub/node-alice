@@ -1,13 +1,15 @@
+var codeDep = require('./code-dep')
+
 module.exports = function tree(){
-    // console.log('hello my friend');
 
     var tree = 'my tree';
 
     if(tree) {
+    // if (true) {
       result = 'did run';
     } else {
       result = 'did not run';
     }
-
-    return 'friend';
+    //
+    return 'friend: ' + codeDep();
 };

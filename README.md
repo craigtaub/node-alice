@@ -18,7 +18,9 @@ static analysis?
 ===
 
 == Notes:
-- stores via SINGLETON as each file got own global={}
+- all via require hooks
+- parsed and instrumented
+- stores via module SINGLETON as each file was getting own global={}
 - iterate over original value, not new...as writing to new and messes up forEach.
 - what splice need keys to follow (real location after instrumenting): 0==0, 1==2, 2==4
 - nested only needs to work for each file as require-hook will treat each file/dep as top level.

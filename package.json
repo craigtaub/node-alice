@@ -12,7 +12,8 @@
     "prof-file-parser": "node --prof-process isolate-0x102004a00-v8.log > log.txt",
     "babel-plugin": "babel-node src/server.js",
     "require-hook": "node lib/index.js",
-    "node-alice": "babel-node ./alice.js ./lib/es6-test"
+    "node-alice": "babel-node ./alice.js ./lib/es6-test",
+    "coveraje": "node coveraje/craig-parse.js"
   },
   "author": "",
   "license": "ISC",
