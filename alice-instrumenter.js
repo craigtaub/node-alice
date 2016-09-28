@@ -577,7 +577,7 @@
             //console.log(JSON.stringify(program, undefined, 2));
 
             generated = ESPGEN.generate(program, codegenOptions);
-            // preamble = this.getPreamble(originalCode || '', usingStrict); // CRAIG
+            preamble = this.getPreamble(originalCode || '', usingStrict);
 
             // if (generated.map && generated.code) {
             //     lineCount = preamble.split(/\r\n|\r|\n/).length;
@@ -696,14 +696,15 @@
             }
             coverState = this.opts.debug ? JSON.stringify(this.coverState, undefined, 4) : JSON.stringify(this.coverState);
             code = [
-                "%STRICT%",
-                "var %VAR% = (Function('return this'))();",
-                "if (!%VAR%.%GLOBAL%) { %VAR%.%GLOBAL% = {}; }",
-                "%VAR% = %VAR%.%GLOBAL%;",
-                "if (!(%VAR%['%FILE%'])) {",
-                "   %VAR%['%FILE%'] = %OBJECT%;",
-                "}",
-                "%VAR% = %VAR%['%FILE%'];"
+                "%STRICT%"
+                // "var %VAR% = (Function('return this'))();",
+                // "if (!%VAR%.%GLOBAL%) { %VAR%.%GLOBAL% = {}; }",
+                // "%VAR% = %VAR%.%GLOBAL%;",
+                // "if (!(%VAR%['%FILE%'])) {",
+                // "   %VAR%['%FILE%'] = %OBJECT%;",
+                // "}",
+                // "%VAR% = %VAR%['%FILE%'];"
+                // CRAIG its required for 'use strict' to appear already, but dont ant all other garbage from coverage
             ].join("\n")
                 .replace(/%STRICT%/g, replacer(strictLine))
                 .replace(/%VAR%/g, replacer(tracker))

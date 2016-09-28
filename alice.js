@@ -22,13 +22,14 @@ function requireHook() {
         var transformedCode = transform(code, filename);
 
         // console.log('---- TRANSFORM START-----');
+        // console.log(code); // VERY USEFUL
         // console.log(transformedCode); // VERY USEFUL
         // console.log('---- TRANSFORM END-----');
 
       } else {
         var transformedCode = code;
       }
-      // console.log('transformed: ' transformedCode);
+      // oldCompile.call(mod, code, filename);
       oldCompile.call(mod, transformedCode, filename);
     }
     oldHook(mod, filename);
