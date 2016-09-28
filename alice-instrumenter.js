@@ -976,8 +976,12 @@
                 // down
             // );
             // return ret; // CRAIG removed so doesnt increment
-            // console.log(ESPGEN.generate(node));
-            return astgen.variable('console.log("craigs-tracker-var-b:, ' + this.theFilename + '", ' + JSON.stringify(ESPGEN.generate(node).toString()) + ')')
+
+            if (node) {
+                return astgen.variable('console.log("craigs-tracker-var-b:, ' + this.theFilename + '", ' + JSON.stringify(ESPGEN.generate(node).toString()) + ')')
+            } else {
+                return astgen.variable('console.log("craigs-tracker-var-b: ' + this.theFilename + ' NO NODE")')
+            }
         },
 
         locationsForNodes: function (nodes) {
