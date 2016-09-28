@@ -2,8 +2,8 @@
  Copyright (c) 2012, Yahoo! Inc.  All rights reserved.
  Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
  */
- function craigTrackerStatement(theVar) {
-    return theVar;
+ function craigTrackerStatement(filename, node) {
+    return 'singleton.add("'+ filename+ '", '+ JSON.stringify(node.toString()) +');';
  }
 
 /*global esprima, escodegen, window */
@@ -844,10 +844,15 @@
 
                 sName = this.statementName(node.loc);
 
-
-                var toPrint = astgen.variable('console.log("craigs-tracker-var-s:, ' + this.theFilename + '", ' + JSON.stringify(ESPGEN.generate(node).toString()) + ')');
+                // OLD
+                // var toPrint = astgen.variable('console.log("craigs-tracker-var-s:, ' + this.theFilename + '", ' + JSON.stringify(ESPGEN.generate(node).toString()) + ')');
+                // if (node.type === 'IfStatement') {
+                //     toPrint = astgen.variable('console.log("craigs-tracker-var-f:, ' + this.theFilename + '", ' + JSON.stringify('(' +ESPGEN.generate(node.test).toString()+ ')' ) + ')');
+                // }
+                // NEW
+                var toPrint = astgen.variable(craigTrackerStatement(this.theFilename, JSON.stringify(ESPGEN.generate(node).toString()) ));
                 if (node.type === 'IfStatement') {
-                    toPrint = astgen.variable('console.log("craigs-tracker-var-f:, ' + this.theFilename + '", ' + JSON.stringify('(' +ESPGEN.generate(node.test).toString()+ ')' ) + ')');
+                    toPrint = astgen.variable(craigTrackerStatement(this.theFilename, JSON.stringify('(' + ESPGEN.generate(node.test).toString() + ')')));
                 }
 
                 incrStatementCount = astgen.statement(

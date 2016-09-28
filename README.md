@@ -27,13 +27,16 @@ static analysis?
 ==
 
 == TODO:
-- get prototype working with routes+calculations all showing for that request...
+- implement singleton into new parser.
+-- make sure adds setup in AST not in code so we dont get coverage of the setup code..
 
+- get prototype working with routes+calculations all showing for that request...
 
 - parse json file and write to html with js to expand/collapse - HALF
 
-- find something to help instrumenting...flexible instrument but write when their does - NOPE
+- find something to help instrumenting...flexible instrument but write when their does - DONE
 -- tried istanbul commands, hooks + babel plugins...nothing
+-- Istanbul parser works i think
 
 - write to global and shutdown handler writes to file - DONE
 -- using 'close' and 'exit' both dont run if user terminates..must be SIGTERM
