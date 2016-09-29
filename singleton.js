@@ -26,7 +26,6 @@ const UserStore = {
   },
   getAll: () => _data,
   clearAll: () => {
-      // console.log('CLEAR ALL');
       _data = {};
   }
 }

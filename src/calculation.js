@@ -1,3 +1,5 @@
+import switchStat from './switchStat';
+
 export default function calculation() {
     var one = 1;
     var two = 2;
@@ -5,5 +7,7 @@ export default function calculation() {
     if (total === 4) {
         total = 5;
     }
-    return total;
+
+
+    return total + switchStat();
 }
