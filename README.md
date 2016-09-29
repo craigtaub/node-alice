@@ -28,6 +28,11 @@ static analysis?
 
 == TODO:
 - get prototype working with routes+calculations all showing for that request...
+-- why prints import if only running whats executing?
+-- bundling calls together, need listed seperately.
+-- babel syntax ?
+
+- implement singleton tracker instead of console.log everywhere - 
 
 - parse json file and write to html with js to expand/collapse - HALF
 
