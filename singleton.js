@@ -19,14 +19,16 @@ const UserStore = {
 
   add: (filename, contents) => {
       if (_data[filename]) {
-        _data[filename].push(contents);
+        _data[filename].push(index + contents);
       } else {
-        _data[filename] = [contents];
+        _data[filename] = [index + contents];
       }
+      index++;
   },
   getAll: () => _data,
   clearAll: () => {
       _data = {};
+      index = 0;
   }
 }
 
