@@ -1,7 +1,7 @@
 let previousFilename = '';
 let index = 0;
 // const _data = [];
-const _data = {};
+let _data = {};
 
 const UserStore = {
   // improved singleton
@@ -24,7 +24,11 @@ const UserStore = {
         _data[filename] = [contents];
       }
   },
-  getAll: () => _data
+  getAll: () => _data,
+  clearAll: () => {
+      // console.log('CLEAR ALL');
+      _data = {};
+  }
 }
 
 module.exports = UserStore;

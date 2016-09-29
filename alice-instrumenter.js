@@ -4,6 +4,7 @@
  */
  function craigTrackerStatement(filename, node) {
     return 'singleton.add("'+ filename+ '", '+ JSON.stringify(node.toString()) +');';
+    // return 'console.log("'+ filename+ '", '+ JSON.stringify(node.toString()) +');';
  }
 
 var currentDirectory = __dirname;

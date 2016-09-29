@@ -29,10 +29,11 @@ static analysis?
 == TODO:
 - get prototype working with routes+calculations all showing for that request...
 -- why prints import if only running whats executing?
+--- its a singleton so stores as time goes on. needs to add to call handler at transform time as doesnt know if request. can reset in middleware but need to attach that to router..
 -- bundling calls together, need listed seperately.
 -- babel syntax ?
 
-- implement singleton tracker instead of console.log everywhere - 
+- implement singleton tracker instead of console.log everywhere -
 
 - parse json file and write to html with js to expand/collapse - HALF
 
