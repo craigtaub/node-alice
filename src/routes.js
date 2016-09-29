@@ -12,12 +12,6 @@ const router = express.Router();
 // var tree = myFile();
 // console.log(tree);
 
-// WORKS BUT BAD
-router.use(function(req, resp, next) {
-    singleton.clearAll();
-    next();
-});
-
 router.get('/', function(req, res) {
     var total = calculation();
     // console.log(total);

@@ -46,7 +46,7 @@ var writeFile = function(jsonBlob) {
  function setup() {
    // exit -> normal
    // SIGINT -> closed server
-   return 'var writeFile=' + writeFile + '; var currentDirectory="' + currentDirectory + '"; var singleton = require(currentDirectory + \'/singleton\'); process.on(\'SIGINT\', function() { writeFile(singleton.getAll()); process.exit(); }); ';
+   return 'var writeFile=' + writeFile + '; var currentDirectory="' + currentDirectory + '"; var singleton = require(currentDirectory + \'/singleton\'); process.on(\'SIGINT\', function() { writeFile(singleton.getAll()); process.exit(); }); setTimeout(function() { singleton.clearAll(); }, 100);';
  }
 
 
