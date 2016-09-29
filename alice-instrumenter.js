@@ -15,7 +15,7 @@ var writeFile = function(jsonBlob) {
   var body = '';
 
   for (var key in jsonBlob) {
-      body+= '<div>';
+      body+= '<div style="border: solid black;margin-bottom: 40px;">';
       body+= '<p>Filename: ' + key + '</p>';
       jsonBlob[key].forEach(function(value, key) {
         body+= '<p>Contents: ' + value + '</p>';
