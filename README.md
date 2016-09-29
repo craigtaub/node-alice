@@ -28,7 +28,7 @@ static analysis?
 
 == TODO:
 - implement singleton into new parser.
--- make sure adds setup in AST not in code so we dont get coverage of the setup code..
+-- make sure adds setup in AST NOT in code string, so we dont get coverage of the setup code...why it cant go in alice.js and must be instrumenter.js
 
 - get prototype working with routes+calculations all showing for that request...
 

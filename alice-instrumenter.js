@@ -6,6 +6,44 @@
     return 'singleton.add("'+ filename+ '", '+ JSON.stringify(node.toString()) +');';
  }
 
+var currentDirectory = __dirname;
+
+var writeFile = function(jsonBlob) {
+  var fs = require('fs');
+  console.log('WRITE FILE', jsonBlob);
+
+  var body = '';
+
+  for (var key in jsonBlob) {
+      body+= '<div>';
+      body+= '<p>Filename: ' + key + '</p>';
+      jsonBlob[key].forEach(function(value, key) {
+        body+= '<p>Contents: ' + value + '</p>';
+      });
+
+      body+= '</div>';
+  };
+
+  fs.writeFileSync(currentDirectory + '/analysis.html', buildHtml(body));
+
+
+  function buildHtml(body) {
+    var header = 'Some Header';
+
+    return '<!DOCTYPE html>'
+         + '<html><header>' + header + '</header><body>' + body + '</body></html>';
+  };
+}
+
+ function setup() {
+   // exit -> normal
+   // SIGINT -> closed server
+   return 'var writeFile=' + writeFile + '; var currentDirectory="' + currentDirectory + '"; var singleton = require(currentDirectory + \'/singleton\'); process.on(\'SIGINT\', function() { writeFile(singleton.getAll()); process.exit(); }); ';
+ }
+
+
+
+
 /*global esprima, escodegen, window */
 (function (isNode) {
     "use strict";
@@ -574,7 +612,10 @@
             this.walker.startWalk(program);
             // codegenOptions = this.opts.codeGenerationOptions || { format: { compact: !this.opts.noCompact }}; // CRAIG (makes code compact..cant read)
             // codegenOptions.comment = this.opts.preserveComments; // CRAIG
-            //console.log(JSON.stringify(program, undefined, 2));
+
+            // ADD SETUP AST TO PROGRAM // CRAIG
+            var setupAst = ESP.parse(setup());
+            program.body.unshift(setupAst);
 
             generated = ESPGEN.generate(program, codegenOptions);
             preamble = this.getPreamble(originalCode || '', usingStrict);
