@@ -79,8 +79,10 @@ SHOULD be checking for 'type' first.
 ### Process:
 at runtime (for a request):
 via a hook. build AST. parse into html file.
-#craig-node file.js
-#open my-route.html -> think istanbul can help with that..
+
+`craig-node file.js`
+
+`open my-route.html -> think istanbul can help with that..`
 
 if istanbul can build+parse when runs a test, why cant do it for a request/supertest?
 require-hooks can help, BUT they only run when modules imported, at build-time..
@@ -126,7 +128,8 @@ http://gotwarlost.github.io/istanbul/public/apidocs/classes/Hook.html
 
 
 ### Istanbul instrument command
-#istanbul instrument lib/ -o test-intrument/
+`istanbul instrument lib/ -o test-intrument/`
+
 instruments file/folder into new file/folder. need to execute after.
 works but need options to specify intrumenting into what, does it to coverage-like
 
@@ -134,25 +137,25 @@ can change --variable and --hook-run-in-context but doesnt help.
 
 
 ### babel plugin, locally in .babelrc
-,"plugins": ["./plugin/index.js"]
+`,"plugins": ["./plugin/index.js"]`
 
 
 ### plugin linking (not needed)
 npm link                    
-# creates global link
+`creates global link`
 
 npm link babel-plugin-craig-test              
-# link-install the package
+`link-install the package`
 
 
 ### Babel CLI:
-#babel index.js --out-file app.js
+`babel index.js --out-file app.js`
 
 
 ### Node Simple Profile:
 https://nodejs.org/en/docs/guides/simple-profiling/
-#NODE_ENV=production node --prof index.js   
-#node --prof-process isolate-0x102004a00-v8.log > log.txt
+`NODE_ENV=production node --prof index.js`   
+`node --prof-process isolate-0x102004a00-v8.log > log.txt`
 - does print files but its also compiled so cant follow.
 - what about if in ES5?
 
@@ -160,8 +163,8 @@ https://nodejs.org/en/docs/guides/simple-profiling/
 https://github.com/babel/babylon
 
 ### native Error Stack:
-var stack = new Error().stack
-console.log( stack )
+`var stack = new Error().stack`
+`console.log( stack )`
 - not helpful, its the current location and what called it..
 
 http://www.chromium.org/developers/how-tos/trace-event-profiling-tool
