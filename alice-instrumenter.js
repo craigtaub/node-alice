@@ -9,28 +9,32 @@
 
 var currentDirectory = __dirname;
 
-var writeFile = function(jsonBlob) {
+var writeFile = function(fileAndContents) {
   var fs = require('fs');
-  console.log('WRITE FILE', jsonBlob);
+  console.log('WRITE FILE', fileAndContents);
 
   var body = '';
 
 
-  // fileAndContents.forEach(function(value, key) {
-  //   value.contents.forEach(function(value, key) {
-  //       console.log(value);
-  //   });
-  // })
-
-  for (var key in jsonBlob) {
-      body+= '<div style="border: solid black;margin-bottom: 40px;">';
-      body+= '<p>Filename: ' + key + '</p>';
-      jsonBlob[key].forEach(function(value, key) {
+  fileAndContents.forEach(function(value, key) {
+    body+= '<div style="border: solid black;margin-bottom: 40px;">';
+    body+= '<p>Filename: ' + value.filename + '</p>';
+    value.contents.forEach(function(value, key) {
         body+= '<p>Contents: ' + value + '</p>';
-      });
+    });
+    body+= '</div>';
+  })
 
-      body+= '</div>';
-  };
+  // old format
+  // for (var key in jsonBlob) {
+  //     body+= '<div style="border: solid black;margin-bottom: 40px;">';
+  //     body+= '<p>Filename: ' + key + '</p>';
+  //     jsonBlob[key].forEach(function(value, key) {
+  //       body+= '<p>Contents: ' + value + '</p>';
+  //     });
+  //
+  //     body+= '</div>';
+  // };
 
   fs.writeFileSync(currentDirectory + '/analysis.html', buildHtml(body));
 
@@ -45,8 +49,9 @@ var writeFile = function(jsonBlob) {
 
  function setup() {
    // exit -> normal
+   return 'var writeFile=' + writeFile + '; var currentDirectory="' + currentDirectory + '"; var singleton = require(currentDirectory + \'/singleton\'); process.on(\'exit\', function() { writeFile(singleton.getAll()); process.exit(); }); //setTimeout(function() { singleton.clearAll(); }, 100);';
    // SIGINT -> closed server
-   return 'var writeFile=' + writeFile + '; var currentDirectory="' + currentDirectory + '"; var singleton = require(currentDirectory + \'/singleton\'); process.on(\'SIGINT\', function() { writeFile(singleton.getAll()); process.exit(); }); setTimeout(function() { singleton.clearAll(); }, 100);';
+  //  return 'var writeFile=' + writeFile + '; var currentDirectory="' + currentDirectory + '"; var singleton = require(currentDirectory + \'/singleton\'); process.on(\'SIGINT\', function() { writeFile(singleton.getAll()); process.exit(); }); setTimeout(function() { singleton.clearAll(); }, 100);';
  }
 
 
