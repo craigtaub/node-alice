@@ -1,6 +1,6 @@
 export default function switchStat() {
-    var someString = 'oy';
-    var result = '';
+    const someString = 'oy';
+    let result = '';
     switch(someString) {
         case 'o':
             result = 'bad code';

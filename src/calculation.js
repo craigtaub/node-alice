@@ -1,9 +1,9 @@
 import switchStat from './switchStat';
 
 export default function calculation() {
-    var one = 1;
-    var two = 2;
-    var total = one + two;
+    const one = 1;
+    const two = 2;
+    let total = one + two;
     if (total === 4) {
         total = 5;
     }

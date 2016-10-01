@@ -19,8 +19,12 @@ function requireHook() {
   require.extensions['.js'] = function (mod, filename) {
     var oldCompile = mod._compile;
     mod._compile = function (code, filename) {
+      code = code.replace(/require\('babel-register'\);/, '');
+      // STRIP ANY ADDITIONAL BABEL HOOKS !!!
+
       // console.log('filename: ' , filename.match(/launch/));
       // console.log('filename: ' , filename);
+      // console.log(code);
       if (!filename.match(/node_modules/) && !filename.match(/singleton/)) {
       // filename.match(/node-alice/) && !filename.match(/singleton/)) {
         var transformedCode = transform(code, filename);

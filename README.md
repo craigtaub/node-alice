@@ -26,18 +26,21 @@ static analysis?
 
 ## TODO:
 - try on real app 'node ./node_modules/node-alice/alice /server.js'
- - ** account wont work with 'babel-register' set ???
+ - runs alot more code than it should??
+  - THINK it includes what Jade executes, which is good.
+ - account wont work with 'babel-register' set ???
   - not presets, hook doesnt open launch.js file
   - WORKS when i move alice/instrumenter/singleton into work app folder...think issue with location...WHY?
   - FAILS: node ./node_modules/node-alice/alice /server.js
   - WORKS: node alice.js /src/index.js
   - actual require-hook not running for app files ??
-  - if located anywhere in app its fine, if outside app wont work.
+  - IF located anywhere in app its fine, IF outside app OR local node_modules wont work.
+  - require.extension is actually deprecated, babel relies on nodes deprecated feature.
+  - FIX stripped any babel-register hooks as app doesnt need it and causes problems
  - set SIGINT listener each time, need to check before i set
   - think can up listeners or reset them each time
- - runs alot more code than it should??
-  - THINK it includes what Jade executes, which is good.
 - iteration - when a loop prints code block X number of times...nasty although correct. need to only print line once if matches previous line exactly.
+- strip out import/exports from appearing in block, shouldn't though.
 - parse json file and write to html with js to expand/collapse - HALF
 - implement singleton tracker instead of console.log everywhere - HALF
 
@@ -54,7 +57,7 @@ static analysis?
   - when use its Instrumenter it instruments es5.
   - when use instrument command ('istanbul instrument') has issues with es6 imports/exports
   - SO ONLY issue with es6 is modules...mocha doesnt show imports as at build-time etc and inline requires work due to hook...what if istanbul mocha ignores the import code and shows everything else???
-  - YES. istanbul shows es6 import/export BUT doesnt flag as ran...
+  - YES. istanbul shows es6 import/export BUT doesnt flag as ran...regardless how use export (import always same way)
 - BUG why prints import if only running whats executing?
  - its a singleton so stores as time goes on. needs to add to call handler at transform time as doesnt know if request. can reset in middleware but need to attach that to router..SO after 100ms of build it resets.. - DONE
 - bundling calls together, need listed separately - DONE
