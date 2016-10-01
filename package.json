@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --compilers js:babel-register",
-    "test-cov": "istanbul cover _mocha -- --compilers js:babel-register",
+    "test": "mocha --compilers js:babel-register old/test/calculation.test.js",
+    "test-cov": "istanbul cover _mocha -- --compilers js:babel-register old/test/calculation.test.js",
     "istanbul-instrument": "istanbul instrument lib/ -o test-intrument/",
     "babel-basic": "babel src -d lib",
     "prof-file-builder": "NODE_ENV=production node --prof lib/server.js",
@@ -14,7 +14,8 @@
     "require-hook": "node lib/index.js",
     "coveraje": "node coveraje/craig-parse.js",
     "node-alice-test": "babel-node ./alice.js ./lib/es6-test",
-    "node-alice-server": "babel-node ./alice.js ./src/server"
+    "node-babel-alice-server": "babel-node ./alice.js ./src/server",
+    "node-alice-server": "node ./alice.js /src/index"
   },
   "author": "",
   "license": "ISC",

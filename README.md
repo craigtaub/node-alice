@@ -23,34 +23,51 @@ static analysis?
 - what splice need keys to follow (real location after instrumenting): 0==0, 1==2, 2==4
 - nested only needs to work for each file as require-hook will treat each file/dep as top level.
 
+
 ## TODO:
-- get prototype working with routes+calculations all showing for that request...
- - bundling calls together, need listed seperately.
- - babel syntax ?
- - why prints import if only running whats executing?
-  - its a singleton so stores as time goes on. needs to add to call handler at transform time as doesnt know if request. can reset in middleware but need to attach that to router..SO after 100ms of build it resets.. - DONE
-
-- implement singleton tracker instead of console.log everywhere -
-
+- try on real app 'node ./node_modules/node-alice/alice /server.js'
+ - ** account wont work with 'babel-register' set ???
+  - not presets, hook doesnt open launch.js file
+  - WORKS when i move alice/instrumenter/singleton into work app folder...think issue with location...WHY?
+  - FAILS: node ./node_modules/node-alice/alice /server.js
+  - WORKS: node alice.js /src/index.js
+  - actual require-hook not running for app files ??
+  - if located anywhere in app its fine, if outside app wont work.
+ - set SIGINT listener each time, need to check before i set
+  - think can up listeners or reset them each time
+ - runs alot more code than it should??
+  - THINK it includes what Jade executes, which is good.
+- iteration - when a loop prints code block X number of times...nasty although correct. need to only print line once if matches previous line exactly.
 - parse json file and write to html with js to expand/collapse - HALF
+- implement singleton tracker instead of console.log everywhere - HALF
 
-- implement singleton into new parser - DONE
- - make sure adds setup in AST NOT in code string, so we dont get coverage of the setup code...why it cant go in alice.js and must be instrumenter.js
 
+## DONE
+- babel syntax / allow ES6 (espirma works with ES6) - BAD (CANT FIX)
+ - require-hook not babel-node
+ - might need some updates for exports/imports etc but should work
+ - 'babel-node' -> works but post babel
+ - 'node' -> wont work unless require('babel-register') before and then
+  produces es5 code.
+   - WHY: require-hook works on requires, before babel they are imports, node does not know to run the hook. so doesnt..only after babel has run does it run hook on other files.
+ - BUT how does Istanbul do it then?
+  - when use its Instrumenter it instruments es5.
+  - when use instrument command ('istanbul instrument') has issues with es6 imports/exports
+  - SO ONLY issue with es6 is modules...mocha doesnt show imports as at build-time etc and inline requires work due to hook...what if istanbul mocha ignores the import code and shows everything else???
+  - YES. istanbul shows es6 import/export BUT doesnt flag as ran...
+- BUG why prints import if only running whats executing?
+ - its a singleton so stores as time goes on. needs to add to call handler at transform time as doesnt know if request. can reset in middleware but need to attach that to router..SO after 100ms of build it resets.. - DONE
+- bundling calls together, need listed separately - DONE
+- make cli tool - DONE...node analyse.js my-entry-file.js
+ - could improve into 'analyse my-entry-file.js' creating node-cli package.
+- write to global and shutdown handler writes to file - DONE
+ - using 'close' and 'exit' both dont run if user terminates..must be SIGTERM
 - find something to help instrumenting...flexible instrument but write when their does - DONE
  - tried istanbul commands, hooks + babel plugins...nothing
  - Istanbul parser works i think
-
-- write to global and shutdown handler writes to file - DONE
- - using 'close' and 'exit' both dont run if user terminates..must be SIGTERM
-
-- make cli tool - DONE...node analyse.js my-entry-file.js
- - could improve into 'analyse my-entry-file.js' creating node-cli package.
-
-- allow ES6 (espirma works for ES6) - DONE
- - work with es6 espress?
- - might need some updates for exports/imports etc but should work
-
+- implement singleton into new parser - DONE
+ - make sure adds setup in AST NOT in code string, so we dont get coverage of the setup code...why it cant go in alice.js and must be instrumenter.js
+- get prototype working with routes+calculations all showing for that request... - DONE
 
 ### low priority..i know its possible
 - fix
@@ -63,6 +80,16 @@ static analysis?
 i.e. can hand object prop into function checking for IF, EXPORT, etc...
 
 - Dont print if is nested
+
+
+## Testing
+/node-alice
+npm link
+
+/account
+npm link node-alice
+
+./node_modules/node-alice ./server.js
 
 
 ## Research

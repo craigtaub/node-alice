@@ -1,7 +1,3 @@
-/*
- Copyright (c) 2012, Yahoo! Inc.  All rights reserved.
- Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
- */
  function craigTrackerStatement(filename, node) {
     return 'singleton.add("'+ filename+ '", '+ JSON.stringify(node.toString()) +');';
     // return 'console.log("'+ filename+ '", '+ JSON.stringify(node.toString()) +');';
@@ -37,10 +33,10 @@ var writeFile = function(fileAndContents) {
 }
 
  function setup() {
-   // exit -> normal
-   return 'var writeFile=' + writeFile + '; var currentDirectory="' + currentDirectory + '"; var singleton = require(currentDirectory + \'/singleton\'); process.on(\'exit\', function() { writeFile(singleton.getAll()); process.exit(); }); //setTimeout(function() { singleton.clearAll(); }, 100);';
-   // SIGINT -> closed server
-  //  return 'var writeFile=' + writeFile + '; var currentDirectory="' + currentDirectory + '"; var singleton = require(currentDirectory + \'/singleton\'); process.on(\'SIGINT\', function() { writeFile(singleton.getAll()); process.exit(); }); setTimeout(function() { singleton.clearAll(); }, 100);';
+   // exit -> normal // -TEST
+  //  return 'var writeFile=' + writeFile + '; var currentDirectory="' + currentDirectory + '"; var singleton = require(currentDirectory + \'/singleton\'); process.on(\'exit\', function() { writeFile(singleton.getAll()); process.exit(); }); //setTimeout(function() { singleton.clearAll(); }, 100);';
+   // SIGINT -> closed server // -SERVER
+   return 'var writeFile=' + writeFile + '; var currentDirectory="' + currentDirectory + '"; var singleton = require(currentDirectory + \'/singleton\'); process.setMaxListeners(0); process.on(\'SIGINT\', function() { writeFile(singleton.getAll()); process.exit(); }); setTimeout(function() { singleton.clearAll(); }, 100);';
  }
 
 

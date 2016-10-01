@@ -1,6 +1,7 @@
 var esprima = require('esprima');
 var escodegen = require('escodegen');
 var Instrumenter = require('./alice-instrumenter');
+require('babel-register');
 
 function transform(code, filename) {
   var item = {options: {}};
@@ -18,7 +19,10 @@ function requireHook() {
   require.extensions['.js'] = function (mod, filename) {
     var oldCompile = mod._compile;
     mod._compile = function (code, filename) {
+      // console.log('filename: ' , filename.match(/launch/));
+      // console.log('filename: ' , filename);
       if (!filename.match(/node_modules/) && !filename.match(/singleton/)) {
+      // filename.match(/node-alice/) && !filename.match(/singleton/)) {
         var transformedCode = transform(code, filename);
 
         // console.log(code); // VERY USEFUL
@@ -38,4 +42,5 @@ function requireHook() {
 requireHook();
 
 var file = process.argv[2]
-require(file);
+var currentDir = process.cwd();
+require(currentDir + file);
