@@ -36,7 +36,7 @@ var writeFile = function(fileAndContents) {
    // exit -> normal // -TEST
   //  return 'var writeFile=' + writeFile + '; var currentDirectory="' + currentDirectory + '"; var singleton = require(currentDirectory + \'/singleton\'); process.on(\'exit\', function() { writeFile(singleton.getAll()); process.exit(); }); //setTimeout(function() { singleton.clearAll(); }, 100);';
    // SIGINT -> closed server // -SERVER
-   return 'var writeFile=' + writeFile + '; var currentDirectory="' + currentDirectory + '"; var singleton = require(currentDirectory + \'/singleton\'); process.setMaxListeners(0); process.on(\'SIGINT\', function() { writeFile(singleton.getAll()); process.exit(); }); setTimeout(function() { singleton.clearAll(); }, 100);';
+   return 'var writeFile=' + writeFile + '; var currentDirectory="' + currentDirectory + '"; var singleton = require(currentDirectory + \'/singleton\'); if (!singleton.getListener()) { process.on(\'SIGINT\', function() { writeFile(singleton.getAll()); process.exit(); }); singleton.setListener(); } setTimeout(function() { singleton.clearAll(); }, 100);';
  }
 
 

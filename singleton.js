@@ -1,6 +1,7 @@
 let previousFilename = '';
 let index = -1;
 let _data = [];
+let listenerStatus = false;
 
 const UserStore = {
   add: (filename, contents) => {
@@ -16,7 +17,9 @@ const UserStore = {
   clearAll: () => {
       _data = [];
       index = -1;
-  }
+  },
+  setListener: () => listenerStatus = true,
+  getListener: () => listenerStatus
 }
 
 module.exports = UserStore;
