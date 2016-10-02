@@ -25,7 +25,9 @@ function requireHook() {
       // console.log('filename: ' , filename.match(/launch/));
       // console.log('filename: ' , filename);
       // console.log(code);
-      if (!filename.match(/node_modules/) && !filename.match(/singleton/)) {
+      if (!filename.match(/node_modules/) &&
+          !filename.match(/singleton/) &&
+          !filename.match(/alice-instrumenter/)) {
       // filename.match(/node-alice/) && !filename.match(/singleton/)) {
         var transformedCode = transform(code, filename);
 

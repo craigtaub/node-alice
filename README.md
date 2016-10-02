@@ -25,6 +25,12 @@ static analysis?
 
 
 ## TODO:
+- parse json file and write to html with js to expand/collapse - HALF
+- implement singleton tracker instead of console.log everywhere - HALF
+
+## DONE
+- iteration - when a loop prints code block X number of times...nasty although correct. need to only print line once if matches previous line exactly.
+ - fixed with previousContent
 - try on real app 'node ./node_modules/node-alice/alice /server.js'
  - runs alot more code than it should??
    - THINK it includes what Jade executes, which is good.
@@ -42,13 +48,6 @@ static analysis?
    - think can up listeners or reset them each time..if not just heavy but still works
     - cant need 'process.setMaxListeners(0);' so can do infinite, BAD THO.
     - SOLVED using singleton again.
-- iteration - when a loop prints code block X number of times...nasty although correct. need to only print line once if matches previous line exactly.
-- strip out import/exports from appearing in block, shouldn't though.
-- parse json file and write to html with js to expand/collapse - HALF
-- implement singleton tracker instead of console.log everywhere - HALF
-
-
-## DONE
 - babel syntax / allow ES6 (espirma works with ES6) - BAD (CANT FIX)
  - require-hook not babel-node
  - might need some updates for exports/imports etc but should work
