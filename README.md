@@ -30,18 +30,18 @@ static analysis?
    - THINK it includes what Jade executes, which is good.
  - account wont work with 'babel-register' set ???
    - not presets, hook doesnt open launch.js file
-   - WORKS when i move alice/instrumenter/singleton into work app folder...think issue with location...WHY?
-   - FAILS: node ./node_modules/node-alice/alice /server.js
-   - WORKS: node alice.js /src/index.js
-   - actual require-hook not running for app files.
-   - IF located anywhere in app its fine, IF outside app OR local node_modules wont work.
-   - require.extension is actually deprecated, babel relies on nodes deprecated feature.
-   - FIX stripped any babel-register hooks as app doesnt need it and causes problems
-   - WHY think local babel-register overrides alice one IF alice one in node_modules. ??
+    - WORKS when i move alice/instrumenter/singleton into work app folder...think issue with location...WHY?
+    - FAILS: node ./node_modules/node-alice/alice /server.js
+    - WORKS: node alice.js /src/index.js
+    - actual require-hook not running for app files.
+    - IF located anywhere in app its fine, IF outside app OR local node_modules wont work.
+    - require.extension is actually deprecated, babel relies on nodes deprecated feature.
+    - FIX stripped any babel-register hooks as app doesnt need it and causes problems
+    - WHY think local babel-register overrides alice one IF alice one in node_modules. ??
  - set SIGINT listener each time, need to check before i set
    - think can up listeners or reset them each time..if not just heavy but still works
-   - cant need 'process.setMaxListeners(0);' so can do infinite, BAD THO.
-   - SOLVED using singleton again.
+    - cant need 'process.setMaxListeners(0);' so can do infinite, BAD THO.
+    - SOLVED using singleton again.
 - iteration - when a loop prints code block X number of times...nasty although correct. need to only print line once if matches previous line exactly.
 - strip out import/exports from appearing in block, shouldn't though.
 - parse json file and write to html with js to expand/collapse - HALF
@@ -58,7 +58,7 @@ static analysis?
    - WHY: require-hook works on requires, before babel they are imports, node does not know to run the hook. so doesnt..only after babel has run does it run hook on other files.
  - BUT how does Istanbul do it then?
    - when use its Instrumenter it instruments es5.
-   - when use instrument command ('istanbul instrument') has issues with es6 imports/exports
+    - when use instrument command ('istanbul instrument') has issues with es6 imports/exports
   - SO ONLY issue with es6 is modules...mocha doesnt show imports as at build-time etc and inline requires work due to hook...what if istanbul mocha ignores the import code and shows everything else???
   - YES. istanbul shows es6 import/export BUT doesnt flag as ran...regardless how use export (import always same way)
   - ALSO it flags the run line numbers of the function so compares that against real code, not transformed code.
