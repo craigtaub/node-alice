@@ -13,7 +13,8 @@
     "babel-plugin": "babel-node src/server.js",
     "require-hook": "node lib/index.js",
     "coveraje": "node coveraje/craig-parse.js",
-    "node-alice-test": "babel-node ./alice.js ./lib/es6-test",
+    "node-alice-babel-test": "babel-node ./alice.js ./lib/es6-test",
+    "node-alice-test": "node ./alice.js /lib/es6-index",
     "node-babel-alice-server": "babel-node ./alice.js ./src/server",
     "node-alice-server": "node ./alice.js /src/index"
   },

@@ -21,8 +21,6 @@ static analysis?
 - stores via module SINGLETON as each file was getting own global={}
 
 ## TODO:
-- fix console logs.
-- fix statements which arent useful
 - parse json file and write to html with js to expand/collapse - HALF
  - maybe flow chart with arrows back and forward.
 - implement singleton tracker instead of console.log everywhere - HALF
@@ -52,6 +50,8 @@ static analysis?
   - ELSE have to dis-allow apps using inline requires..
 
 ## DONE
+- fix statements which arent useful - DONE removed line in coverFunction as seems to print function.
+- fix console logs - DONE fix is branchIncrementExprAst
 - iteration - when a loop prints code block X number of times...nasty although correct. need to only print line once if matches previous line exactly.
  - fixed with previousContent
 - babel syntax / allow ES6 (espirma works with ES6) - BAD (CANT FIX)

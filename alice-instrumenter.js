@@ -976,19 +976,20 @@ var writeFile = function(fileAndContents) {
             }
             // console.log(JSON.stringify(ESPGEN.generate(body).toString()));
 
-            blockBody.unshift(
-                astgen.statement(
-                    // astgen.postIncrement(
-                        // astgen.subscript(
-                            // astgen.dot(astgen.variable(this.currentState.trackerVar), astgen.variable('f')),
-                            // BLOCK
-                            // astgen.variable('console.log("craigs-tracker-var-f:, ' + this.theFilename + '", ' + JSON.stringify(ESPGEN.generate(body).toString()) + ')')
-                            astgen.variable(craigTrackerStatement(this.theFilename, JSON.stringify(ESPGEN.generate(body).toString())))
-                            // astgen.stringLiteral(id)
-                        // )
-                    // ) // CRAIG removed so doesnt include incrementer
-                )
-            );
+            // CRAIG - PRINTS FUNCTION
+            // blockBody.unshift(
+            //     astgen.statement(
+            //         // astgen.postIncrement(
+            //             // astgen.subscript(
+            //                 // astgen.dot(astgen.variable(this.currentState.trackerVar), astgen.variable('f')),
+            //                 // BLOCK
+            //                 // astgen.variable('console.log("craigs-tracker-var-f:, ' + this.theFilename + '", ' + JSON.stringify(ESPGEN.generate(body).toString()) + ')')
+            //                 astgen.variable(craigTrackerStatement(this.theFilename, JSON.stringify(ESPGEN.generate(body).toString())))
+            //                 // astgen.stringLiteral(id)
+            //             // )
+            //         // ) // CRAIG removed so doesnt include incrementer
+            //     )
+            // );
             if (popped) {
                 blockBody.unshift(popped);
             }
@@ -1027,17 +1028,21 @@ var writeFile = function(fileAndContents) {
 
             // BLOCK
             // NEW
-            // if (node) {
-                // return astgen.variable(craigTrackerStatement(this.theFilename, JSON.stringify(ESPGEN.generate(node.test).toString())));
-            // } else {
-                // return astgen.variable(craigTrackerStatement(this.theFilename, JSON.stringify('NO NODE')));
-            // }
-            // OLD
             if (node) {
-                return astgen.variable('console.log("craigs-tracker-var-b-ok:, ' + this.theFilename + '", ' + JSON.stringify(ESPGEN.generate(node).toString()) + ')')
+                if (node.test) {
+                    return astgen.variable(craigTrackerStatement(this.theFilename, JSON.stringify(ESPGEN.generate(node.test).toString())));
+                } else {
+                    return astgen.variable(craigTrackerStatement(this.theFilename, JSON.stringify(ESPGEN.generate(node).toString())));
+                }
             } else {
-                return astgen.variable('console.log("craigs-tracker-var-b-fail: ' + this.theFilename + ' NO NODE")')
+                return astgen.variable('""');
             }
+            // OLD
+            // if (node) {
+                // return astgen.variable('console.log("craigs-tracker-var-b-ok:, ' + this.theFilename + '", ' + JSON.stringify(ESPGEN.generate(node).toString()) + ')')
+            // } else {
+            //     return astgen.variable('console.log("craigs-tracker-var-b-fail: ' + this.theFilename + ' NO NODE")')
+            // }
         },
 
         locationsForNodes: function (nodes) {
@@ -1064,6 +1069,7 @@ var writeFile = function(fileAndContents) {
                 thenBody = node.consequent.body,
                 elseBody = node.alternate.body,
                 child;
+            // console.log('caller A');
             thenBody.unshift(astgen.statement(this.branchIncrementExprAst(bName, 0, node.consequent)));
             elseBody.unshift(astgen.statement(this.branchIncrementExprAst(bName, 1, node.alternate)));
             if (ignoreThen) { child = node.consequent; child.preprocessor = this.startIgnore; child.postprocessor = this.endIgnore; }
@@ -1085,6 +1091,7 @@ var writeFile = function(fileAndContents) {
             bName = this.branchName('switch', walker.startLineForNode(node), this.locationsForNodes(cases));
             for (i = 0; i < cases.length; i += 1) {
                 cases[i].branchLocation = this.branchLocationFor(bName, i);
+                // console.log('caller B');
                 cases[i].consequent.unshift(astgen.statement(this.branchIncrementExprAst(bName, i)));
             }
         },
@@ -1098,6 +1105,7 @@ var writeFile = function(fileAndContents) {
         },
 
         conditionalBranchInjector: function (node, walker) {
+          // console.log('caller C');
             var bName = this.branchName('cond-expr', walker.startLineForNode(node), this.locationsForNodes([ node.consequent, node.alternate ])),
                 ast1 = this.branchIncrementExprAst(bName, 0),
                 ast2 = this.branchIncrementExprAst(bName, 1);
@@ -1144,6 +1152,7 @@ var writeFile = function(fileAndContents) {
             );
             for (i = 0; i < leaves.length; i += 1) {
                 tuple = leaves[i];
+                // console.log('caller D');
                 tuple.parent[tuple.property] = astgen.sequence(this.branchIncrementExprAst(bName, i), tuple.node);
                 tuple.node.preprocessor = this.maybeAddSkip(this.branchLocationFor(bName, i));
             }
