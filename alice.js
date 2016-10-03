@@ -23,12 +23,12 @@ function requireHook() {
       // STRIP ANY ADDITIONAL BABEL HOOKS !!!
 
       // console.log('filename: ' , filename.match(/launch/));
-      // console.log('filename: ' , filename);
       // console.log(code);
       if (!filename.match(/node_modules/) &&
           !filename.match(/singleton/) &&
           !filename.match(/alice-instrumenter/)) {
       // filename.match(/node-alice/) && !filename.match(/singleton/)) {
+        // console.log('filename: ' , filename);
         var transformedCode = transform(code, filename);
 
         // console.log(code); // VERY USEFUL

@@ -19,19 +19,16 @@ static analysis?
 - all via require hooks
 - parsed and instrumented
 - stores via module SINGLETON as each file was getting own global={}
-- iterate over original value, not new...as writing to new and messes up forEach.
-- what splice need keys to follow (real location after instrumenting): 0==0, 1==2, 2==4
-- nested only needs to work for each file as require-hook will treat each file/dep as top level.
-
 
 ## TODO:
+- fix console logs.
+- fix statements which arent useful
 - parse json file and write to html with js to expand/collapse - HALF
+ - maybe flow chart with arrows back and forward.
 - implement singleton tracker instead of console.log everywhere - HALF
+- MAYBE swap to istanbul technique for flagging line numbers so doesnt use compiled code, pre-compiled code, but knows from line number
 
-## DONE
-- iteration - when a loop prints code block X number of times...nasty although correct. need to only print line once if matches previous line exactly.
- - fixed with previousContent
-- try on real app 'node ./node_modules/node-alice/alice /server.js'
+## try on real app 'node ./node_modules/node-alice/alice /server.js'
  - runs alot more code than it should??
    - THINK it includes what Jade executes, which is good.
  - account wont work with 'babel-register' set ???
@@ -48,6 +45,15 @@ static analysis?
    - think can up listeners or reset them each time..if not just heavy but still works
     - cant need 'process.setMaxListeners(0);' so can do infinite, BAD THO.
     - SOLVED using singleton again.
+ - BUG blog requires no setTimeout ?? should instrument 1st time, execute second time.
+  - app starts and adds alot, reset should be fine..
+  - IF require inline WILL lose data as calls setTimeout at top to clear code..
+  - FIXED by using singleton to set when has reset.
+  - ELSE have to dis-allow apps using inline requires..
+
+## DONE
+- iteration - when a loop prints code block X number of times...nasty although correct. need to only print line once if matches previous line exactly.
+ - fixed with previousContent
 - babel syntax / allow ES6 (espirma works with ES6) - BAD (CANT FIX)
  - require-hook not babel-node
  - might need some updates for exports/imports etc but should work
@@ -88,6 +94,12 @@ i.e. can hand object prop into function checking for IF, EXPORT, etc...
 - Dont print if is nested
 
 
+## Old notes:
+- iterate over original value, not new...as writing to new and messes up forEach.
+- what splice need keys to follow (real location after instrumenting): 0==0, 1==2, 2==4
+- nested only needs to work for each file as require-hook will treat each file/dep as top level.
+
+
 ## Testing
 /node-alice
 npm link
@@ -96,6 +108,7 @@ npm link
 npm link node-alice
 
 ./node_modules/node-alice ./server.js
+- basic, work, blog
 
 
 ## Research
