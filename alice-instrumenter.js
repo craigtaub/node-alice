@@ -890,9 +890,9 @@ var writeFile = function(fileAndContents) {
                 //     toPrint = astgen.variable('console.log("craigs-tracker-var-f:, ' + this.theFilename + '", ' + JSON.stringify('(' +ESPGEN.generate(node.test).toString()+ ')' ) + ')');
                 // }
                 // NEW
-                var toPrint = astgen.variable(craigTrackerStatement(this.theFilename, JSON.stringify(ESPGEN.generate(node).toString()) ));
+                var toPrint = astgen.variable(craigTrackerStatement(this.theFilename, ESPGEN.generate(node).toString() ));
                 if (node.type === 'IfStatement') {
-                    toPrint = astgen.variable(craigTrackerStatement(this.theFilename, JSON.stringify('(' + ESPGEN.generate(node.test).toString() + ')')));
+                    toPrint = astgen.variable(craigTrackerStatement(this.theFilename, '(' + ESPGEN.generate(node.test).toString() + ')'));
                 }
 
                 incrStatementCount = astgen.statement(
@@ -1030,9 +1030,11 @@ var writeFile = function(fileAndContents) {
             // NEW
             if (node) {
                 if (node.test) {
-                    return astgen.variable(craigTrackerStatement(this.theFilename, JSON.stringify(ESPGEN.generate(node.test).toString())));
+                    return astgen.variable(craigTrackerStatement(this.theFilename, ESPGEN.generate(node.test).toString()));
                 } else {
-                    return astgen.variable(craigTrackerStatement(this.theFilename, JSON.stringify(ESPGEN.generate(node).toString())));
+                    // NOT NEEDED as prints block again but in { }
+                    // return astgen.variable(craigTrackerStatement(this.theFilename, JSON.stringify('//a ' + ESPGEN.generate(node).toString())));
+                    return astgen.variable('""');
                 }
             } else {
                 return astgen.variable('""');

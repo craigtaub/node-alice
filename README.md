@@ -22,6 +22,10 @@ static analysis?
 
 ## TODO:
 - give value of certain properties, like debugger does, its live.
+- fix statements which arent useful - DONE
+ - removed line in coverFunction as seems to print function.
+ - removed blocks in { }
+ - removed extra stringify
 - parse json file and write to html with js to expand/collapse - HALF
  - maybe flow chart with arrows back and forward.
 - implement singleton tracker instead of console.log everywhere - HALF
