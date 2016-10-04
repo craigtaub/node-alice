@@ -1,5 +1,3 @@
-var esprima = require('esprima');
-var escodegen = require('escodegen');
 var Instrumenter = require('./alice-instrumenter');
 require('babel-register');
 

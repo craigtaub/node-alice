@@ -19,6 +19,8 @@ static analysis?
 - all via require hooks
 - parsed and instrumented
 - stores via module SINGLETON as each file was getting own global={}
+- Promises:
+  - print as 1 long line as thats how they execute...but then runs code after.
 
 ## TODO:
 - give value of certain properties, like debugger does, its live.

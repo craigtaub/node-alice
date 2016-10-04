@@ -895,6 +895,15 @@ var writeFile = function(fileAndContents) {
                     toPrint = astgen.variable(craigTrackerStatement(this.theFilename, '(' + ESPGEN.generate(node.test).toString() + ')'));
                 }
 
+                // ATTEMPT to print value,
+                if (node.type === 'VariableDeclaration' &&
+                    node.declarations[0].init &&
+                    node.declarations[0].init.value) {
+
+                    var value = ESPGEN.generate(node.declarations[0].init);
+                    toPrint = astgen.variable(craigTrackerStatement(this.theFilename, 'Assign: ' + ESPGEN.generate(node).toString() + ' THE VALUE ' + value));
+                }
+
                 incrStatementCount = astgen.statement(
                     // astgen.postIncrement(
                         // astgen.subscript(
