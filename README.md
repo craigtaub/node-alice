@@ -25,6 +25,7 @@ static analysis?
 ## TODO:
 - parse json file and write to html with js to expand/collapse - HALF
  - maybe flow chart with arrows back and forward.
+- load HTML file in app dir not node-alice - DONE
 - give value of certain properties, like debugger does, its live. - FAILED
  - dont think possible has to execute as sometimes LONG value as string and errors when executes.
 - fix statements which arent useful - DONE

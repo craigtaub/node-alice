@@ -29,7 +29,7 @@ var writeFile = function(fileAndContents) {
   });
   body+= '<div>';
 
-  fs.writeFileSync(currentDirectory + '/analysis.html', buildHtml(body));
+  fs.writeFileSync(process.cwd() + '/node-alice.html', buildHtml(body));
 
 
   function buildHtml(body) {
