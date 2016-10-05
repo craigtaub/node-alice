@@ -47,4 +47,4 @@ requireHook();
 
 var file = process.argv[2]
 var currentDir = process.cwd();
-require(currentDir + file);
+require(currentDir + '/' + file);

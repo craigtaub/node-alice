@@ -7,7 +7,7 @@ var currentDirectory = __dirname;
 
 var writeFile = function(fileAndContents) {
   var fs = require('fs');
-  console.log('WRITE FILE', fileAndContents);
+  // console.log('WRITE FILE', fileAndContents); // FOR DEBUGGING
 
   var body = '';
 
