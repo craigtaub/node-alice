@@ -24,6 +24,7 @@ static analysis?
 
 ## TODO:
 - give value of certain properties, like debugger does, its live.
+ - dont think possible has to execute as sometimes LONG value as string and errors when executes.
 - fix statements which arent useful - DONE
  - removed line in coverFunction as seems to print function.
  - removed blocks in { }

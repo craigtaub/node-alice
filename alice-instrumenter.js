@@ -1,7 +1,4 @@
- function craigTrackerStatement(filename, node, execute) {
-    if (execute) {
-      return 'singleton.add("'+ filename+ '", '+ JSON.stringify(node.toString()) + ', ' + (execute) + ');';
-    }
+ function craigTrackerStatement(filename, node) {
     return 'singleton.add("'+ filename+ '", '+ JSON.stringify(node.toString()) + ');';
     // return 'console.log("'+ filename+ '", '+ JSON.stringify(node.toString()) +');';
  }
@@ -898,14 +895,6 @@ var writeFile = function(fileAndContents) {
                     toPrint = astgen.variable(craigTrackerStatement(this.theFilename, '(' + ESPGEN.generate(node.test).toString() + ')'));
                 }
 
-                // ATTEMPT to print value,
-                if (node.type === 'VariableDeclaration' &&
-                    node.declarations[0].init) {
-
-                    var value = ESPGEN.generate(node.declarations[0].init);
-                    toPrint = astgen.variable(craigTrackerStatement(this.theFilename, 'Assign: ' + ESPGEN.generate(node).toString(), value));
-                }
-
                 incrStatementCount = astgen.statement(
                     // astgen.postIncrement(
                         // astgen.subscript(
@@ -1038,18 +1027,20 @@ var writeFile = function(fileAndContents) {
             // return ret; // CRAIG removed so doesnt increment
 
             // BLOCK
-            // NEW
-            if (node) {
-                if (node.test) {
-                    return astgen.variable(craigTrackerStatement(this.theFilename, ESPGEN.generate(node.test).toString()));
-                } else {
-                    // NOT NEEDED as prints block again but in { }
-                    // return astgen.variable(craigTrackerStatement(this.theFilename, JSON.stringify('//a ' + ESPGEN.generate(node).toString())));
-                    return astgen.variable('""');
-                }
-            } else {
-                return astgen.variable('""');
-            }
+            // NEW...
+            // if (node) {
+            //     if (node.test) {
+            //         return astgen.variable(craigTrackerStatement(this.theFilename, ESPGEN.generate(node.test).toString()));
+            //     } else {
+            //         // NOT NEEDED as prints block again but in { }
+            //         // return astgen.variable(craigTrackerStatement(this.theFilename, JSON.stringify('//a ' + ESPGEN.generate(node).toString())));
+            //         return astgen.variable('""');
+            //     }
+            // } else {
+            //     return astgen.variable('""');
+            // }
+            // DONT THINK ITS USED
+            return astgen.variable('""');
             // OLD
             // if (node) {
                 // return astgen.variable('console.log("craigs-tracker-var-b-ok:, ' + this.theFilename + '", ' + JSON.stringify(ESPGEN.generate(node).toString()) + ')')
