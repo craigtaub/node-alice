@@ -23,15 +23,15 @@ static analysis?
   - print as 1 long line as thats how they execute...but then runs code after.
 
 ## TODO:
-- give value of certain properties, like debugger does, its live.
+- parse json file and write to html with js to expand/collapse - HALF
+ - maybe flow chart with arrows back and forward.
+- give value of certain properties, like debugger does, its live. - FAILED
  - dont think possible has to execute as sometimes LONG value as string and errors when executes.
 - fix statements which arent useful - DONE
  - removed line in coverFunction as seems to print function.
  - removed blocks in { }
  - removed extra stringify
-- parse json file and write to html with js to expand/collapse - HALF
- - maybe flow chart with arrows back and forward.
-- implement singleton tracker instead of console.log everywhere - HALF
+- implement singleton tracker instead of console.log everywhere - DONE
 - MAYBE swap to istanbul technique for flagging line numbers so doesnt use compiled code, pre-compiled code, but knows from line number
 
 ## try on real app 'node ./node_modules/node-alice/alice /server.js'

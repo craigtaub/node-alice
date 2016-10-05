@@ -11,15 +11,23 @@ var writeFile = function(fileAndContents) {
 
   var body = '';
 
+  body+='<script>function toggleItem(theId) { var theElement = document.getElementById(theId); theElement.style.display = theElement.style.display === "none" ? "" : "none"; }</script>';
+  body+='<script>function toggleAll() { for (var i = 0; i < document.getElementById("all").children.length; i++ ) { var item = document.getElementById("all").children[i].children[2]; item.style.display = item.style.display === "none" ? "" : "none"; }}</script>';
 
+  body+= ' [ <span onClick="toggleAll();">Toggle All open/close</span> ]';
+  body+= '<div id="all">';
   fileAndContents.forEach(function(value, key) {
     body+= '<div style="border: solid black;margin-bottom: 40px;">';
-    body+= '<p>Filename: ' + value.filename + '</p>';
-    value.contents.forEach(function(value, key) {
-        body+= '<p>Contents: ' + value + '</p>';
-    });
+      body+= '<span>Filename: ' + value.filename + '</span>';
+      body+= ' [ <span onClick="toggleItem(' + key.toString() + ');">Toggle open/close</span> ]';
+      body+= '<div id="' + key + '" style="display:none">';
+      value.contents.forEach(function(value, key) {
+          body+= '<p>Contents: ' + value + '</p>';
+      });
+      body+= '</div>';
     body+= '</div>';
-  })
+  });
+  body+= '<div>';
 
   fs.writeFileSync(currentDirectory + '/analysis.html', buildHtml(body));
 
