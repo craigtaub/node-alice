@@ -26,10 +26,10 @@ function requireHook() {
           !filename.match(/singleton/) &&
           !filename.match(/alice-instrumenter/)) {
       // filename.match(/node-alice/) && !filename.match(/singleton/)) {
-        // console.log('filename: ' , filename);
         var transformedCode = transform(code, filename);
 
-        // console.log(code); // VERY USEFUL
+        // console.log('filename: ' , filename);
+        // // console.log(code); // VERY USEFUL
         // console.log('---- TRANSFORM START-----');
         // console.log(transformedCode); // VERY USEFUL
         // console.log('---- TRANSFORM END-----');

@@ -1,5 +1,8 @@
- function craigTrackerStatement(filename, node) {
-    return 'singleton.add("'+ filename+ '", '+ JSON.stringify(node.toString()) +');';
+ function craigTrackerStatement(filename, node, execute) {
+    if (execute) {
+      return 'singleton.add("'+ filename+ '", '+ JSON.stringify(node.toString()) + ', ' + (execute) + ');';
+    }
+    return 'singleton.add("'+ filename+ '", '+ JSON.stringify(node.toString()) + ');';
     // return 'console.log("'+ filename+ '", '+ JSON.stringify(node.toString()) +');';
  }
 
@@ -897,11 +900,10 @@ var writeFile = function(fileAndContents) {
 
                 // ATTEMPT to print value,
                 if (node.type === 'VariableDeclaration' &&
-                    node.declarations[0].init &&
-                    node.declarations[0].init.value) {
+                    node.declarations[0].init) {
 
                     var value = ESPGEN.generate(node.declarations[0].init);
-                    toPrint = astgen.variable(craigTrackerStatement(this.theFilename, 'Assign: ' + ESPGEN.generate(node).toString() + ' THE VALUE ' + value));
+                    toPrint = astgen.variable(craigTrackerStatement(this.theFilename, 'Assign: ' + ESPGEN.generate(node).toString(), value));
                 }
 
                 incrStatementCount = astgen.statement(
