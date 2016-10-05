@@ -1,8 +1,8 @@
 
-  node-alice server.js
-  // open your app/url in the browser
-  // turn the app off via <ctrl+c>
-  open node-alice.html
+    node-alice server.js
+    // open your app/url in the browser
+    // turn the app off via <ctrl+c>
+    open node-alice.html
 
 ## what?
 - run a request, creates html page with diagram of files + code within that file.
