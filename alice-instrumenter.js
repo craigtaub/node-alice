@@ -1,7 +1,10 @@
+
  function craigTrackerStatement(filename, node) {
     filename = filename.replace(process.cwd(), ''); // remove entire path
     filename = filename.replace(/^\/|\/$/g, ''); // remove and leading slash
-    return 'singleton.add("'+ filename+ '", '+ JSON.stringify(node.toString()) + ');';
+
+    var getStack = '(function() { try { throw new Error(); } catch(e) { return e.stack; } })().toString()';
+    return 'singleton.add("'+ filename+ '", '+ JSON.stringify(node.toString()) + ', ' + getStack + ');';
     // return 'console.log("'+ filename+ '", '+ JSON.stringify(node.toString()) +');';
  }
 
@@ -26,7 +29,6 @@ var writeFile = function(fileAndContents) {
   body+= '<script>function toggleItems() { reset(); var args = [].slice.call(arguments); toggleParents(args); }</script>';
   body+= '<script>function toggleParents(itemArray) { for (var i = 0; i < document.getElementById("right-content").children.length; i++ ) { if(itemArray.indexOf(i) === -1) { toggleItem(i + \'-parent\'); } else { toggleItem(i); } } }</script>';
 
-
   // Build array for left hand list
   var listOfFilenames = {};
   fileAndContents.forEach(function(value, key) {
@@ -39,22 +41,37 @@ var writeFile = function(fileAndContents) {
   });
 
   // Left hand list
-  body+= '<div id="left-content" style="width: 33%; float: left; word-wrap: break-word;">';
-  body+= '<span>Filter</span> <span onClick="reset();">[ Reset ]</span>';
+  body+= '<div id="left-content" style="width: 27%; float: left; word-wrap: break-word;">';
+  body+= '<span>Filename Filter</span> <span onClick="reset();">[ Reset ]</span>';
   for (var prop in listOfFilenames) {
       var values = listOfFilenames[prop];
       body+= '<div style="border: solid black;margin-bottom: 40px;">';
-        body+= '<span>Filename: ' + prop + '</span>';
+        body+= '<span>' + prop + '</span>';
         body+= ' [ <span onClick="toggleItems(' + values.toString() + ');">Toggle</span> ]';
       body+= '</div>';
   };
   body+= '</div>';
 
   // Right hand list
-  body+= '<div id="right-content" style="width: 63%; float: right;">';
+  body+= '<div id="right-content" style="width: 70%; float: right;">';
   body+= ' [ <span onClick="toggleAll();">Toggle All</span> ]';
+
+  var previousPadding = 0;
+  var increments = 0;
   fileAndContents.forEach(function(value, key) {
-    body+= '<div id="' + key + '-parent"  style="border: solid black;margin-bottom: 40px;">';
+    var padding = 0;
+    var previousFile = (fileAndContents[key-1]) ? fileAndContents[key-1].filename : undefined;
+
+    if (value.stack && previousFile && value.stack.match(previousFile)) { // previous file called this one.
+      increments++;
+      padding = previousPadding + 20;
+    } else {
+      increments--;
+      padding = previousPadding - 20;
+    }
+    previousPadding = padding;
+
+    body+= '<div id="' + key + '-parent"  style="margin-left: ' + padding + 'px;border: solid black;margin-bottom: 40px;">';
       body+= '<span>Filename: ' + value.filename + '</span>';
       body+= ' [ <span onClick="toggleItem(' + key.toString() + ');">Toggle</span> ]';
       body+= '<div id="' + key + '" style="display:none">';
@@ -935,10 +952,15 @@ var writeFile = function(fileAndContents) {
                 //     toPrint = astgen.variable('console.log("craigs-tracker-var-f:, ' + this.theFilename + '", ' + JSON.stringify('(' +ESPGEN.generate(node.test).toString()+ ')' ) + ')');
                 // }
                 // NEW
+                // var toPrint = astgen.variable('var test = (function() { try { throw new Error("boo"); } catch(e) { console.log(e.stack); } })();');
                 var toPrint = astgen.variable(craigTrackerStatement(this.theFilename, ESPGEN.generate(node).toString() ));
                 if (node.type === 'IfStatement') {
                     toPrint = astgen.variable(craigTrackerStatement(this.theFilename, '(' + ESPGEN.generate(node.test).toString() + ')'));
                 }
+                // if (node.type === 'CallExpression') {
+                //     console.log('HAPPENED');
+                //     // toPrint = astgen.variable(craigTrackerStatement(this.theFilename, '(CRAIG) ' + ESPGEN.generate(node).toString() ));
+                // }
 
                 incrStatementCount = astgen.statement(
                     // astgen.postIncrement(

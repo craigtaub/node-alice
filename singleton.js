@@ -6,15 +6,15 @@ let previousContents = '';
 let reset = false;
 
 const UserStore = {
-  add: (filename, contents) => {
+  add: (filename, contents, stack) => {
       if (previousContents === contents) {
-        previousContents = contents;
-        return;
+        return; // remove iteration
       }
       if (previousFilename === filename) {
           _data[index].contents.push(contents);
       } else {
-        _data.push({'filename': filename, 'contents': [contents]});
+        _data.push({'filename': filename, 'contents': [contents], 'stack': stack});
+        // just first item, as other will have same caller.
         index++;
       }
       previousContents = contents;

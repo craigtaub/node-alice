@@ -29,11 +29,17 @@ static analysis?
 
 
 ## TODO:
-- Only show filename path from application root not computer root.
+- UI Call Stack: nest the nested calls via padding
+ - ONLY BASIC THO. possible as check if next===previous and previous not already indented. if deep nested cant really know.
+ - TRIED catching if CallExpression (execute function) or arguments.callee both didnt work.
+ - SO get error trace for each line and parse where called from.
+ - BUT need to keep top level ones top, know how much padding its gone through if no match..CANT all it knows if current item called or not..  
+ - BUT if not error OR ???
 - parse json file and write to html with js to expand/collapse - HALF
  - maybe flow chart with arrows back and forward - too many installs.
  - ui with right entire stack, all or expand/collapse per item..left, expand/collapse per filename (should also hide others in those instances)
- - make look good..
+ - make look good..twitter bootstrap list view
+- Only show filename path from application root not computer root - DONE
 - load HTML file in app dir not node-alice - DONE
 - give value of certain properties, like debugger does, its live. - FAILED
  - dont think possible has to execute as sometimes LONG value as string and errors when executes.
