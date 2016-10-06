@@ -1,4 +1,6 @@
  function craigTrackerStatement(filename, node) {
+    filename = filename.replace(process.cwd(), ''); // remove entire path
+    filename = filename.replace(/^\/|\/$/g, ''); // remove and leading slash
     return 'singleton.add("'+ filename+ '", '+ JSON.stringify(node.toString()) + ');';
     // return 'console.log("'+ filename+ '", '+ JSON.stringify(node.toString()) +');';
  }
@@ -11,11 +13,37 @@ var writeFile = function(fileAndContents) {
 
   var body = '';
 
-  body+='<script>function toggleItem(theId) { var theElement = document.getElementById(theId); theElement.style.display = theElement.style.display === "none" ? "" : "none"; }</script>';
-  body+='<script>function toggleAll() { for (var i = 0; i < document.getElementById("all").children.length; i++ ) { var item = document.getElementById("all").children[i].children[2]; item.style.display = item.style.display === "none" ? "" : "none"; }}</script>';
+  // setup function
+  body+='<script>function toggle(element) { element.style.display = element.style.display === "none" ? "" : "none"; }</script>';
+  body+='<script>function toggleItem(theId) { var theElement = document.getElementById(theId); toggle(theElement); }</script>';
+  body+='<script>function toggleAll() { for (var i = 0; i < document.getElementById("right-content").children.length; i++ ) { var item = document.getElementById("right-content").children[i].children[2]; if (item && item.style) { toggle(item); }}}</script>';
+  body+= '<script>function toggleItems() { console.log("toggling"); for (var i = 0; i < arguments.length; i++) { toggleItem(arguments[i]); } }</script>';
 
+  // Build array for left hand list
+  var listOfFilenames = {};
+  fileAndContents.forEach(function(value, key) {
+    if (!listOfFilenames[value.filename]) {
+      listOfFilenames[value.filename] = [];
+      listOfFilenames[value.filename].push(key.toString());
+    } else {
+        listOfFilenames[value.filename].push(key.toString());
+    }
+  });
+
+  // Left hand list
+  body+= '<div id="left-content" style="width: 30%; float: left; word-wrap: break-word;">';
+  for (var prop in listOfFilenames) {
+      var values = listOfFilenames[prop];
+      body+= '<div style="border: solid black;margin-bottom: 40px;">';
+        body+= '<span>Filename: ' + prop + '</span>';
+        body+= ' [ <span onClick="toggleItems(' + values.toString() + ');">Toggle open/close</span> ]';
+      body+= '</div>';
+  };
+  body+= '</div>';
+
+  // Right hand list
   body+= ' [ <span onClick="toggleAll();">Toggle All open/close</span> ]';
-  body+= '<div id="all">';
+  body+= '<div id="right-content" style="width: 60%; float: right;">';
   fileAndContents.forEach(function(value, key) {
     body+= '<div style="border: solid black;margin-bottom: 40px;">';
       body+= '<span>Filename: ' + value.filename + '</span>';
