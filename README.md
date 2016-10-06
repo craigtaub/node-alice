@@ -25,10 +25,15 @@ static analysis?
 - stores via module SINGLETON as each file was getting own global={}
 - Promises:
   - print as 1 long line as thats how they execute...but then runs code after.
+- executing iterations will show unless they are 1 liners
+
 
 ## TODO:
+- Only show filename path from application root not computer root.
 - parse json file and write to html with js to expand/collapse - HALF
- - maybe flow chart with arrows back and forward.
+ - maybe flow chart with arrows back and forward - too many installs.
+ - ui with right entire stack, all or expand/collapse per item..left, expand/collapse per filename (should also hide others in those instances)
+ - make look good..
 - load HTML file in app dir not node-alice - DONE
 - give value of certain properties, like debugger does, its live. - FAILED
  - dont think possible has to execute as sometimes LONG value as string and errors when executes.

@@ -14,10 +14,18 @@ var writeFile = function(fileAndContents) {
   var body = '';
 
   // setup function
-  body+='<script>function toggle(element) { element.style.display = element.style.display === "none" ? "" : "none"; }</script>';
+  // all use
+  body+='<script>function toggle(element) { if (element && element.style) { element.style.display = element.style.display === "none" ? "" : "none"; }}</script>';
+  body+='<script>function reset() { for (var i = 0; i < document.getElementById("right-content").children.length; i++ ) { if (document.getElementById("right-content").children[i].style) { document.getElementById("right-content").children[i].style.display = ""; if (document.getElementById("right-content").children[i].children[2]) { document.getElementById("right-content").children[i].children[2].style.display = "none"; }}} }</script>';
+
+  // right hand side
   body+='<script>function toggleItem(theId) { var theElement = document.getElementById(theId); toggle(theElement); }</script>';
   body+='<script>function toggleAll() { for (var i = 0; i < document.getElementById("right-content").children.length; i++ ) { var item = document.getElementById("right-content").children[i].children[2]; if (item && item.style) { toggle(item); }}}</script>';
-  body+= '<script>function toggleItems() { console.log("toggling"); for (var i = 0; i < arguments.length; i++) { toggleItem(arguments[i]); } }</script>';
+
+  // left hand side
+  body+= '<script>function toggleItems() { reset(); var args = [].slice.call(arguments); toggleParents(args); }</script>';
+  body+= '<script>function toggleParents(itemArray) { for (var i = 0; i < document.getElementById("right-content").children.length; i++ ) { if(itemArray.indexOf(i) === -1) { toggleItem(i + \'-parent\'); } else { toggleItem(i); } } }</script>';
+
 
   // Build array for left hand list
   var listOfFilenames = {};
@@ -31,23 +39,24 @@ var writeFile = function(fileAndContents) {
   });
 
   // Left hand list
-  body+= '<div id="left-content" style="width: 30%; float: left; word-wrap: break-word;">';
+  body+= '<div id="left-content" style="width: 33%; float: left; word-wrap: break-word;">';
+  body+= '<span>Filter</span> <span onClick="reset();">[ Reset ]</span>';
   for (var prop in listOfFilenames) {
       var values = listOfFilenames[prop];
       body+= '<div style="border: solid black;margin-bottom: 40px;">';
         body+= '<span>Filename: ' + prop + '</span>';
-        body+= ' [ <span onClick="toggleItems(' + values.toString() + ');">Toggle open/close</span> ]';
+        body+= ' [ <span onClick="toggleItems(' + values.toString() + ');">Toggle</span> ]';
       body+= '</div>';
   };
   body+= '</div>';
 
   // Right hand list
-  body+= ' [ <span onClick="toggleAll();">Toggle All open/close</span> ]';
-  body+= '<div id="right-content" style="width: 60%; float: right;">';
+  body+= '<div id="right-content" style="width: 63%; float: right;">';
+  body+= ' [ <span onClick="toggleAll();">Toggle All</span> ]';
   fileAndContents.forEach(function(value, key) {
-    body+= '<div style="border: solid black;margin-bottom: 40px;">';
+    body+= '<div id="' + key + '-parent"  style="border: solid black;margin-bottom: 40px;">';
       body+= '<span>Filename: ' + value.filename + '</span>';
-      body+= ' [ <span onClick="toggleItem(' + key.toString() + ');">Toggle open/close</span> ]';
+      body+= ' [ <span onClick="toggleItem(' + key.toString() + ');">Toggle</span> ]';
       body+= '<div id="' + key + '" style="display:none">';
       value.contents.forEach(function(value, key) {
           body+= '<p>Contents: ' + value + '</p>';
@@ -61,7 +70,7 @@ var writeFile = function(fileAndContents) {
 
 
   function buildHtml(body) {
-    var header = 'Some Header';
+    var header = '<h1>Alice Analyzer</h1>';
 
     return '<!DOCTYPE html>'
          + '<html><header>' + header + '</header><body>' + body + '</body></html>';
