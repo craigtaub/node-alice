@@ -56,32 +56,87 @@ var writeFile = function(fileAndContents) {
   body+= '<div id="right-content" style="width: 70%; float: right;">';
   body+= ' [ <span onClick="toggleAll();">Toggle All</span> ]';
 
-  var previousPadding = 0;
-  var increments = 0;
-  fileAndContents.forEach(function(value, key) {
-    var padding = 0;
-    var previousFile = (fileAndContents[key-1]) ? fileAndContents[key-1].filename : undefined;
+  // OLD ONE
+  // fileAndContents.forEach(function(value, key) {
+  //   body+= '<div id="' + key + '-parent"  style="border: solid black;margin-bottom: 40px;">';
+  //     body+= '<span>Filename: ' + value.filename + '</span>';
+  //     body+= ' [ <span onClick="toggleItem(' + key.toString() + ');">Toggle</span> ]';
+  //     body+= '<div id="' + key + '" style="display:none">';
+  //     value.contents.forEach(function(value, key) {
+  //         body+= '<p>Contents: ' + value + '</p>';
+  //     });
+  //     body+= '</div>';
+  //   body+= '</div>';
+  // });
 
-    if (value.stack && previousFile && value.stack.match(previousFile)) { // previous file called this one.
-      increments++;
-      padding = previousPadding + 20;
-    } else {
-      increments--;
-      padding = previousPadding - 20;
-    }
-    previousPadding = padding;
 
-    body+= '<div id="' + key + '-parent"  style="margin-left: ' + padding + 'px;border: solid black;margin-bottom: 40px;">';
-      body+= '<span>Filename: ' + value.filename + '</span>';
-      body+= ' [ <span onClick="toggleItem(' + key.toString() + ');">Toggle</span> ]';
-      body+= '<div id="' + key + '" style="display:none">';
-      value.contents.forEach(function(value, key) {
-          body+= '<p>Contents: ' + value + '</p>';
+  // Rebuild object into nested call stack format.
+  var expressCaller = 'express/lib/router/layer.js';
+  function reformat(obj) {
+      var stack = [];
+
+      obj.forEach((value, key) => {
+        if (stack.length === 0) {
+            stack.push(build(value));
+        } else {
+          var stackArray = value.stack.split('\n');
+          var parent = stackArray[3].trim();
+          if (!parent.match('.js:') === true) { // its a command not a file, try next one.
+              parent = stackArray[4].trim();
+          }
+
+          if (!!parent.match(expressCaller) === true) {
+              stack.push(build(value));
+          } else {
+              return recurse(stack, value, parent);
+          }
+        }
       });
+
+      return stack;
+  }
+  function recurse(stack, value, parent) {
+    if (stack[stack.length-1]) {
+      if (!!parent.match(stack[stack.length-1].filename) === true) {
+          stack[stack.length-1].children.push(build(value))
+      } else {
+          var currentItemChildren = stack[stack.length-1].children;
+          return recurse(currentItemChildren, value, parent);
+      }
+    }
+  }
+  function build(value) {
+    return {
+      filename: value.filename,
+      contents: value.contents,
+      children: []
+    }
+  }
+
+  // Iterate over object.
+  var nest = '';
+  function iterationContainer(value, nest) {
+    var body = '';
+    nest+= '-';
+    value.forEach(function(value, key) { // border: solid black;margin-bottom: 40px;
+      body+= '<div id="' + key + '-parent"  style="">';
+          body+= '<span>' + nest + 'Filename: ' + value.filename + '</span>';
+          if (value.children.length > 0) {
+              body+= iterationContainer(value.children, nest);
+          }
       body+= '</div>';
-    body+= '</div>';
-  });
-  body+= '<div>';
+    });
+
+    return body;
+  }
+
+  // console.log('-----fileAndContents-----');
+  // console.log(fileAndContents);
+  var newFileAndContents = reformat(fileAndContents);
+  // console.log('-----newFileAndContents-----');
+  // console.log(newFileAndContents);
+  body+= iterationContainer(newFileAndContents, nest);
+  body+= '</div>';
 
   fs.writeFileSync(process.cwd() + '/node-alice.html', buildHtml(body));
 

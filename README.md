@@ -9,6 +9,10 @@
 - run a request, creates html page with diagram of files + code within that file.
 - visual representation of request.
 - easier to follow/read.
+- Call Graph
+- "new code visualization tool that help us understand (and debug) our applications."
+- renders a visualization of the call stack tree.
+- observe the code running in real-time as you use the application.
 
 like dynamic program slicing.
 - input and told exactly what runs.
