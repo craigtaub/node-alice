@@ -3,37 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "test": "mocha --compilers js:babel-register old/test/calculation.test.js",
-    "test-cov": "istanbul cover _mocha -- --compilers js:babel-register old/test/calculation.test.js",
-    "istanbul-instrument": "istanbul instrument lib/ -o test-intrument/",
-    "babel-basic": "babel src -d lib",
-    "prof-file-builder": "NODE_ENV=production node --prof lib/server.js",
-    "prof-file-parser": "node --prof-process isolate-0x102004a00-v8.log > log.txt",
-    "babel-plugin": "babel-node src/server.js",
-    "require-hook": "node lib/index.js",
-    "coveraje": "node coveraje/craig-parse.js",
-    "node-alice-babel-test": "babel-node ./alice.js ./lib/es6-test",
-    "node-alice-test": "node ./alice.js /lib/es6-index",
-    "node-babel-alice-server": "babel-node ./alice.js ./src/server",
-    "node-alice-server": "node ./alice.js /src/index"
-  },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "babel-plugin-transform-runtime": "^6.15.0",
-    "babel-preset-es2015-node4": "^2.1.0",
     "babel-register": "^6.14.0",
-    "babel-runtime": "^6.11.6",
-    "babylon": "^6.11.1",
     "escodegen": "^1.8.1",
     "esprima": "^3.0.0",
-    "esrecurse": "^4.1.0",
-    "express": "^4.14.0",
-    "istanbul": "^1.1.0-alpha.1",
-    "mocha": "^3.0.2"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.14.0"
+    "express": "^4.14.0"
   }
 }
