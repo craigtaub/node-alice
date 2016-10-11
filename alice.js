@@ -1,4 +1,4 @@
-var Instrumenter = require('./alice-instrumenter');
+var Instrumenter = require('./instrumenter');
 require('babel-register');
 
 function transform(code, filename) {
@@ -24,7 +24,8 @@ function requireHook() {
       // console.log(code);
       if (!filename.match(/node_modules/) &&
           !filename.match(/singleton/) &&
-          !filename.match(/alice-instrumenter/)) {
+          !filename.match(/processing/) &&
+          !filename.match(/instrumenter/)) {
       // filename.match(/node-alice/) && !filename.match(/singleton/)) {
         var transformedCode = transform(code, filename);
 

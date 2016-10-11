@@ -1,163 +1,4 @@
-
- function craigTrackerStatement(filename, node) {
-    filename = filename.replace(process.cwd(), ''); // remove entire path
-    filename = filename.replace(/^\/|\/$/g, ''); // remove and leading slash
-
-    var getStack = '(function() { try { throw new Error(); } catch(e) { return e.stack; } })().toString()';
-    return 'singleton.add("'+ filename+ '", '+ JSON.stringify(node.toString()) + ', ' + getStack + ');';
-    // return 'console.log("'+ filename+ '", '+ JSON.stringify(node.toString()) +');';
- }
-
-var currentDirectory = __dirname;
-
-var writeFile = function(fileAndContents) {
-  var fs = require('fs');
-  // console.log('WRITE FILE', fileAndContents); // FOR DEBUGGING
-
-  var body = '';
-
-  // setup function
-  // all use
-  body+='<script>function toggle(element) { if (element && element.style) { element.style.display = element.style.display === "none" ? "" : "none"; }}</script>';
-  body+='<script>function reset() { for (var i = 0; i < document.getElementById("right-content").children.length; i++ ) { if (document.getElementById("right-content").children[i].style) { document.getElementById("right-content").children[i].style.display = ""; if (document.getElementById("right-content").children[i].children[2]) { document.getElementById("right-content").children[i].children[2].style.display = "none"; }}} }</script>';
-
-  // right hand side
-  body+='<script>function toggleItem(theId) { var theElement = document.getElementById(theId); toggle(theElement); }</script>';
-  body+='<script>function toggleAll() { for (var i = 0; i < document.getElementById("right-content").children.length; i++ ) { var item = document.getElementById("right-content").children[i].children[2]; if (item && item.style) { toggle(item); }}}</script>';
-
-  // left hand side
-  body+= '<script>function toggleItems() { reset(); var args = [].slice.call(arguments); toggleParents(args); }</script>';
-  body+= '<script>function toggleParents(itemArray) { for (var i = 0; i < document.getElementById("right-content").children.length; i++ ) { if(itemArray.indexOf(i) === -1) { toggleItem(i + \'-parent\'); } else { toggleItem(i); } } }</script>';
-
-  // Build array for left hand list
-  var listOfFilenames = {};
-  fileAndContents.forEach(function(value, key) {
-    if (!listOfFilenames[value.filename]) {
-      listOfFilenames[value.filename] = [];
-      listOfFilenames[value.filename].push(key.toString());
-    } else {
-        listOfFilenames[value.filename].push(key.toString());
-    }
-  });
-
-  // Left hand list
-  body+= '<div id="left-content" style="width: 27%; float: left; word-wrap: break-word;">';
-  body+= '<span>Filename Filter</span> <span onClick="reset();">[ Reset ]</span>';
-  for (var prop in listOfFilenames) {
-      var values = listOfFilenames[prop];
-      body+= '<div style="border: solid black;margin-bottom: 40px;">';
-        body+= '<span>' + prop + '</span>';
-        body+= ' [ <span onClick="toggleItems(' + values.toString() + ');">Toggle</span> ]';
-      body+= '</div>';
-  };
-  body+= '</div>';
-
-  // Right hand list
-  body+= '<div id="right-content" style="width: 70%; float: right;">';
-  body+= ' [ <span onClick="toggleAll();">Toggle All</span> ]';
-
-  // OLD ONE
-  // fileAndContents.forEach(function(value, key) {
-  //   body+= '<div id="' + key + '-parent"  style="border: solid black;margin-bottom: 40px;">';
-  //     body+= '<span>Filename: ' + value.filename + '</span>';
-  //     body+= ' [ <span onClick="toggleItem(' + key.toString() + ');">Toggle</span> ]';
-  //     body+= '<div id="' + key + '" style="display:none">';
-  //     value.contents.forEach(function(value, key) {
-  //         body+= '<p>Contents: ' + value + '</p>';
-  //     });
-  //     body+= '</div>';
-  //   body+= '</div>';
-  // });
-
-
-  // Rebuild object into nested call stack format.
-  var expressCaller = 'express/lib/router/layer.js';
-  function reformat(obj) {
-      var stack = [];
-
-      obj.forEach((value, key) => {
-        if (stack.length === 0) {
-            stack.push(build(value));
-        } else {
-          var stackArray = value.stack.split('\n');
-          var parent = stackArray[3].trim();
-          if (!parent.match('.js:') === true) { // its a command not a file, try next one.
-              parent = stackArray[4].trim();
-          }
-
-          if (!!parent.match(expressCaller) === true) {
-              stack.push(build(value));
-          } else {
-              return recurse(stack, value, parent);
-          }
-        }
-      });
-
-      return stack;
-  }
-  function recurse(stack, value, parent) {
-    if (stack[stack.length-1]) {
-      if (!!parent.match(stack[stack.length-1].filename) === true) {
-          stack[stack.length-1].children.push(build(value))
-      } else {
-          var currentItemChildren = stack[stack.length-1].children;
-          return recurse(currentItemChildren, value, parent);
-      }
-    }
-  }
-  function build(value) {
-    return {
-      filename: value.filename,
-      contents: value.contents,
-      children: []
-    }
-  }
-
-  // Iterate over object.
-  var nest = '';
-  function iterationContainer(value, nest) {
-    var body = '';
-    nest+= '-';
-    value.forEach(function(value, key) { // border: solid black;margin-bottom: 40px;
-      body+= '<div id="' + key + '-parent"  style="">';
-          body+= '<span>' + nest + 'Filename: ' + value.filename + '</span>';
-          if (value.children.length > 0) {
-              body+= iterationContainer(value.children, nest);
-          }
-      body+= '</div>';
-    });
-
-    return body;
-  }
-
-  // console.log('-----fileAndContents-----');
-  // console.log(fileAndContents);
-  var newFileAndContents = reformat(fileAndContents);
-  // console.log('-----newFileAndContents-----');
-  // console.log(newFileAndContents);
-  body+= iterationContainer(newFileAndContents, nest);
-  body+= '</div>';
-
-  fs.writeFileSync(process.cwd() + '/node-alice.html', buildHtml(body));
-
-
-  function buildHtml(body) {
-    var header = '<h1>Alice Analyzer</h1>';
-
-    return '<!DOCTYPE html>'
-         + '<html><header>' + header + '</header><body>' + body + '</body></html>';
-  };
-}
-
- function setup() {
-   // exit -> normal // -TEST
-  //  return 'var writeFile=' + writeFile + '; var currentDirectory="' + currentDirectory + '"; var singleton = require(currentDirectory + \'/singleton\'); process.on(\'exit\', function() { writeFile(singleton.getAll()); process.exit(); }); //setTimeout(function() { singleton.clearAll(); }, 100);';
-   // SIGINT -> closed server // -SERVER
-   return 'var writeFile=' + writeFile + '; var currentDirectory="' + currentDirectory + '"; var singleton = require(currentDirectory + \'/singleton\'); if (!singleton.getListener()) { process.on(\'SIGINT\', function() { writeFile(singleton.getAll()); process.exit(); }); singleton.setListener(); } setTimeout(function() { if(!singleton.getReset()) { singleton.setReset(); singleton.clearAll(); } }, 100);';
- }
-
-
-
+var processor = require('./processing');
 
 /*global esprima, escodegen, window */
 (function (isNode) {
@@ -729,7 +570,7 @@ var writeFile = function(fileAndContents) {
             // codegenOptions.comment = this.opts.preserveComments; // CRAIG
 
             // ADD SETUP AST TO PROGRAM // CRAIG
-            var setupAst = ESP.parse(setup());
+            var setupAst = ESP.parse(processor.setup());
             program.body.unshift(setupAst);
 
             generated = ESPGEN.generate(program, codegenOptions);
@@ -1008,13 +849,13 @@ var writeFile = function(fileAndContents) {
                 // }
                 // NEW
                 // var toPrint = astgen.variable('var test = (function() { try { throw new Error("boo"); } catch(e) { console.log(e.stack); } })();');
-                var toPrint = astgen.variable(craigTrackerStatement(this.theFilename, ESPGEN.generate(node).toString() ));
+                var toPrint = astgen.variable(processor.craigTrackerStatement(this.theFilename, ESPGEN.generate(node).toString() ));
                 if (node.type === 'IfStatement') {
-                    toPrint = astgen.variable(craigTrackerStatement(this.theFilename, '(' + ESPGEN.generate(node.test).toString() + ')'));
+                    toPrint = astgen.variable(processor.craigTrackerStatement(this.theFilename, '(' + ESPGEN.generate(node.test).toString() + ')'));
                 }
                 // if (node.type === 'CallExpression') {
                 //     console.log('HAPPENED');
-                //     // toPrint = astgen.variable(craigTrackerStatement(this.theFilename, '(CRAIG) ' + ESPGEN.generate(node).toString() ));
+                //     // toPrint = astgen.variable(processing.craigTrackerStatement(this.theFilename, '(CRAIG) ' + ESPGEN.generate(node).toString() ));
                 // }
 
                 incrStatementCount = astgen.statement(
@@ -1106,7 +947,7 @@ var writeFile = function(fileAndContents) {
             //                 // astgen.dot(astgen.variable(this.currentState.trackerVar), astgen.variable('f')),
             //                 // BLOCK
             //                 // astgen.variable('console.log("craigs-tracker-var-f:, ' + this.theFilename + '", ' + JSON.stringify(ESPGEN.generate(body).toString()) + ')')
-            //                 astgen.variable(craigTrackerStatement(this.theFilename, JSON.stringify(ESPGEN.generate(body).toString())))
+            //                 astgen.variable(processing.craigTrackerStatement(this.theFilename, JSON.stringify(ESPGEN.generate(body).toString())))
             //                 // astgen.stringLiteral(id)
             //             // )
             //         // ) // CRAIG removed so doesnt include incrementer
@@ -1152,10 +993,10 @@ var writeFile = function(fileAndContents) {
             // NEW...
             // if (node) {
             //     if (node.test) {
-            //         return astgen.variable(craigTrackerStatement(this.theFilename, ESPGEN.generate(node.test).toString()));
+            //         return astgen.variable(processing.craigTrackerStatement(this.theFilename, ESPGEN.generate(node.test).toString()));
             //     } else {
             //         // NOT NEEDED as prints block again but in { }
-            //         // return astgen.variable(craigTrackerStatement(this.theFilename, JSON.stringify('//a ' + ESPGEN.generate(node).toString())));
+            //         // return astgen.variable(processing.craigTrackerStatement(this.theFilename, JSON.stringify('//a ' + ESPGEN.generate(node).toString())));
             //         return astgen.variable('""');
             //     }
             // } else {
