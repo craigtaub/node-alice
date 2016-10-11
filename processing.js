@@ -1,4 +1,4 @@
-function craigTrackerStatement(filename, node) {
+function aliceTrackerStatement(filename, node) {
    filename = filename.replace(process.cwd(), ''); // remove entire path
    filename = filename.replace(/^\/|\/$/g, ''); // remove and leading slash
 
@@ -170,4 +170,4 @@ function setup() {
 }
 
 exports.setup = setup;
-exports.craigTrackerStatement = craigTrackerStatement;
+exports.aliceTrackerStatement = aliceTrackerStatement;

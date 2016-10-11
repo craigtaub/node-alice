@@ -295,14 +295,14 @@ var processor = require('./processing');
                 seq = this.seq;
                 prefix = '';
                 for (i = 0; i < this.level; i += 1) { prefix += '    '; }
-                // console.log(prefix + 'Enter (' + seq + '):' + node.type); // CRAIG
+                // console.log(prefix + 'Enter (' + seq + '):' + node.type); // ALICE -
             }
             if (pathElement) { this.path.push(pathElement); }
             ret = walkFn.call(this.scope, node, this);
             if (pathElement) { this.path.pop(); }
             if (this.debug) {
                 this.level -= 1;
-                // console.log(prefix + 'Return (' + seq + '):' + node.type); // CRAIG
+                // console.log(prefix + 'Return (' + seq + '):' + node.type); // ALICE -
             }
             return ret || node;
         },
@@ -411,7 +411,7 @@ var processor = require('./processing');
             TryStatement: [ this.paranoidHandlerCheck, this.coverStatement],
             VariableDeclaration: this.coverStatement,
             IfStatement: [ this.ifBlockConverter, this.coverStatement, this.ifBranchInjector ],
-            // IfStatement: [ ], // CRAIG above doubles the counter ?? but looks more correct
+            // IfStatement: [ ], // ALICE -  above doubles the counter ?? but looks more correct
             ForStatement: [ this.skipInit, this.loopBlockConverter, this.coverStatement ],
             ForInStatement: [ this.skipLeft, this.loopBlockConverter, this.coverStatement ],
             ForOfStatement: [ this.skipLeft, this.loopBlockConverter, this.coverStatement ],
@@ -432,7 +432,7 @@ var processor = require('./processing');
         //unit testing purposes only
         // if (this.opts.backdoor && this.opts.backdoor.omitTrackerSuffix) {
         //     this.omitTrackerSuffix = true;
-        // } // CRAIG
+        // } // ALICE -
     }
 
     Instrumenter.prototype = {
@@ -549,7 +549,7 @@ var processor = require('./processing');
                 branchMap: {}
             };
             this.currentState = {
-                trackerVar: generateTrackerVar(filename, this.omitTrackerSuffix), // CRAIG
+                trackerVar: generateTrackerVar(filename, this.omitTrackerSuffix), // ALICE -
                 func: 0,
                 branch: 0,
                 variable: 0,
@@ -566,10 +566,10 @@ var processor = require('./processing');
                 usingStrict = true;
             }
             this.walker.startWalk(program);
-            // codegenOptions = this.opts.codeGenerationOptions || { format: { compact: !this.opts.noCompact }}; // CRAIG (makes code compact..cant read)
-            // codegenOptions.comment = this.opts.preserveComments; // CRAIG
+            // codegenOptions = this.opts.codeGenerationOptions || { format: { compact: !this.opts.noCompact }}; // ALICE -  (makes code compact..cant read)
+            // codegenOptions.comment = this.opts.preserveComments; // ALICE -
 
-            // ADD SETUP AST TO PROGRAM // CRAIG
+            // ADD SETUP AST TO PROGRAM // ALICE -
             var setupAst = ESP.parse(processor.setup());
             program.body.unshift(setupAst);
 
@@ -584,7 +584,7 @@ var processor = require('./processing');
             //     }
             //     this.sourceMap = generated.map;
             //     generated = generated.code;
-            // } // CRAIG
+            // } // ALICE -
 
             return preamble + '\n' + generated + '\n';
         },
@@ -701,7 +701,7 @@ var processor = require('./processing');
                 // "   %VAR%['%FILE%'] = %OBJECT%;",
                 // "}",
                 // "%VAR% = %VAR%['%FILE%'];"
-                // CRAIG its required for 'use strict' to appear already, but dont ant all other garbage from coverage
+                // ALICE -  its required for 'use strict' to appear already, but dont ant all other garbage from coverage
             ].join("\n")
                 .replace(/%STRICT%/g, replacer(strictLine))
                 .replace(/%VAR%/g, replacer(tracker))
@@ -849,13 +849,13 @@ var processor = require('./processing');
                 // }
                 // NEW
                 // var toPrint = astgen.variable('var test = (function() { try { throw new Error("boo"); } catch(e) { console.log(e.stack); } })();');
-                var toPrint = astgen.variable(processor.craigTrackerStatement(this.theFilename, ESPGEN.generate(node).toString() ));
+                var toPrint = astgen.variable(processor.aliceTrackerStatement(this.theFilename, ESPGEN.generate(node).toString() ));
                 if (node.type === 'IfStatement') {
-                    toPrint = astgen.variable(processor.craigTrackerStatement(this.theFilename, '(' + ESPGEN.generate(node.test).toString() + ')'));
+                    toPrint = astgen.variable(processor.aliceTrackerStatement(this.theFilename, '(' + ESPGEN.generate(node.test).toString() + ')'));
                 }
                 // if (node.type === 'CallExpression') {
                 //     console.log('HAPPENED');
-                //     // toPrint = astgen.variable(processing.craigTrackerStatement(this.theFilename, '(CRAIG) ' + ESPGEN.generate(node).toString() ));
+                //     // toPrint = astgen.variable(processing.aliceTrackerStatement(this.theFilename, '(CRAIG) ' + ESPGEN.generate(node).toString() ));
                 // }
 
                 incrStatementCount = astgen.statement(
@@ -869,7 +869,7 @@ var processor = require('./processing');
                 );
 
                 this.splice(incrStatementCount, node, walker);
-                // CRAIG other statements use this i think...
+                // ALICE -  other statements use this i think...
             }
         },
 
@@ -939,7 +939,7 @@ var processor = require('./processing');
             }
             // console.log(JSON.stringify(ESPGEN.generate(body).toString()));
 
-            // CRAIG - PRINTS FUNCTION
+            // ALICE -  - PRINTS FUNCTION
             // blockBody.unshift(
             //     astgen.statement(
             //         // astgen.postIncrement(
@@ -947,10 +947,10 @@ var processor = require('./processing');
             //                 // astgen.dot(astgen.variable(this.currentState.trackerVar), astgen.variable('f')),
             //                 // BLOCK
             //                 // astgen.variable('console.log("craigs-tracker-var-f:, ' + this.theFilename + '", ' + JSON.stringify(ESPGEN.generate(body).toString()) + ')')
-            //                 astgen.variable(processing.craigTrackerStatement(this.theFilename, JSON.stringify(ESPGEN.generate(body).toString())))
+            //                 astgen.variable(processing.aliceTrackerStatement(this.theFilename, JSON.stringify(ESPGEN.generate(body).toString())))
             //                 // astgen.stringLiteral(id)
             //             // )
-            //         // ) // CRAIG removed so doesnt include incrementer
+            //         // ) // ALICE -  removed so doesnt include incrementer
             //     )
             // );
             if (popped) {
@@ -987,16 +987,16 @@ var processor = require('./processing');
                 // ),
                 // down
             // );
-            // return ret; // CRAIG removed so doesnt increment
+            // return ret; // ALICE -  removed so doesnt increment
 
             // BLOCK
             // NEW...
             // if (node) {
             //     if (node.test) {
-            //         return astgen.variable(processing.craigTrackerStatement(this.theFilename, ESPGEN.generate(node.test).toString()));
+            //         return astgen.variable(processing.aliceTrackerStatement(this.theFilename, ESPGEN.generate(node.test).toString()));
             //     } else {
             //         // NOT NEEDED as prints block again but in { }
-            //         // return astgen.variable(processing.craigTrackerStatement(this.theFilename, JSON.stringify('//a ' + ESPGEN.generate(node).toString())));
+            //         // return astgen.variable(processing.aliceTrackerStatement(this.theFilename, JSON.stringify('//a ' + ESPGEN.generate(node).toString())));
             //         return astgen.variable('""');
             //     }
             // } else {
