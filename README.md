@@ -5,6 +5,8 @@ Down the rabbit hole you go..
 
 A tool which renders an interactive visualization of the call stack trees during the lifetime of a request.
 
+![alt tag](/example-usage.gif)
+
 ## Why?
 To help understand (and debug) exactly what runs and from where.
 Observe the code running in real-time as you use your application.
