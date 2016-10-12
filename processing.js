@@ -94,7 +94,7 @@ var writeFile = function(fileAndContents) {
             body+= ' [ <span onClick="toggleItem(\'item-' + iterationIndex + '-content\');">Toggle</span> ]';
             body+= '<div id="item-' + iterationIndex + '-content" style="display:none;">';
             value.contents.forEach(function(value, key) {
-               body+= '<p>Contents: ' + value + '</p>';
+               body+= '<p>' + value + '</p>';
             });
             body+= '</div>';
         body+= '</div>';

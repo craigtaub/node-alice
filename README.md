@@ -25,7 +25,7 @@ Defaults to just showing the filename to give the user the option to show/hide a
 
 ## Example Usage
 
-![alt tag](/example-usage.gif)
+![alt tag](/imgs/example-usage.gif)
 
 ## Why?
 To help understand and learn (and perhaps debug) exactly what runs and from where with your application. You can observe the code running in real-time.
