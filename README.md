@@ -36,14 +36,18 @@ To help understand and learn (and perhaps debug) exactly what runs and from wher
     3. // turn the app off via <ctrl+c>
     4. open node-alice.html
 
-## Keep in mind
-  1. As its storing exactly what code is executed, if you use a Babel require-hook it will show the post-compiled code.
-  2. Any iterations may print repetitive code, as it represents exactly what is run.
-  3. Promises run in a new event tick so they will always appear at the top level.
-  4. Can't really be used with Webpack, the CLI command must be run agains the entry js file.
-  5. If you used Babel-node CLI you must specify a .babelrc or "babel": {} block in package.json in order for node-alice to run. Without the correct presets and plugins your app wont work.
+## Using with Babel
+If you used babel-node CLI you must define a .babelrc or "babel": {} block in your package.json in order for node-alice to run. Without the correct presets and plugins your app wont work. As a side-note I find it important to know what my applications use from Babel anyway.
 
-   This is because node-alice uses a require-hook and babel checks up the tree for .babelrc (not down), so will not have any presets/plugins set for it. Help can be found https://babeljs.io/docs/usage/babelrc/.
+This is because node-alice uses a require-hook and babel checks up the tree for .babelrc (not down), so will not have any presets/plugins set for it. Help can be found https://babeljs.io/docs/usage/babelrc/.
+
+## Using a Transpiler
+As its storing exactly what code is executed, if you use a transpiler (e.g. Babel) it will show the post-compiled code.
+
+## Keep in mind
+  1. Any use of iterations may print repetitive code, as it represents exactly what is run.
+  2. Promises run in a new event tick so they will always appear at the top level.
+  3. Can't really be used with Webpack, the CLI command must be run agains the entry js file.
 
 ## Features:
  - Toggle all open or closed
