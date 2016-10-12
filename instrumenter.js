@@ -38,23 +38,7 @@ var processor = require('./processing');
     }
 
     function generateTrackerVar(filename, omitSuffix) {
-        // var hash, suffix;
-        // if (crypto !== null) {
-        //     hash = crypto.createHash('md5');
-        //     hash.update(filename);
-        //     suffix = hash.digest('base64');
-        //     //trim trailing equal signs, turn identifier unsafe chars to safe ones + => _ and / => $
-        //     suffix = suffix.replace(new RegExp('=', 'g'), '')
-        //         .replace(new RegExp('\\+', 'g'), '_')
-        //         .replace(new RegExp('/', 'g'), '$');
-        // } else {
-        //     window.__cov_seq = window.__cov_seq || 0;
-        //     window.__cov_seq += 1;
-        //     suffix = window.__cov_seq;
-        // }
-        // return '__cov_' + (omitSuffix ? '' : suffix);
         return 'generateTrackerVar ran' + filename
-        // return 'the code ' + code + ';';
     }
 
     function pushAll(ary, thing) {
@@ -254,13 +238,6 @@ var processor = require('./processing');
                     /*istanbul ignore if: paranoid check */
                     if (isArray(assignNode.prepend)) {
                         throw new Error('Internal error: attempt to prepend statements in disallowed (non-array) context');
-                        /* if this should be allowed, this is how to solve it
-                        tmpNode = { type: 'BlockStatement', body: [] };
-                        pushAll(tmpNode.body, assignNode.prepend);
-                        pushAll(tmpNode.body, assignNode);
-                        node[childType] = tmpNode;
-                        delete assignNode.prepend;
-                        */
                     } else {
                         node[childType] = assignNode;
                     }
@@ -295,14 +272,12 @@ var processor = require('./processing');
                 seq = this.seq;
                 prefix = '';
                 for (i = 0; i < this.level; i += 1) { prefix += '    '; }
-                // console.log(prefix + 'Enter (' + seq + '):' + node.type); // ALICE -
             }
             if (pathElement) { this.path.push(pathElement); }
             ret = walkFn.call(this.scope, node, this);
             if (pathElement) { this.path.pop(); }
             if (this.debug) {
                 this.level -= 1;
-                // console.log(prefix + 'Return (' + seq + '):' + node.type); // ALICE -
             }
             return ret || node;
         },
@@ -325,59 +300,6 @@ var processor = require('./processing');
         }
     };
 
-    /**
-     * mechanism to instrument code for coverage. It uses the `esprima` and
-     * `escodegen` libraries for JS parsing and code generation respectively.
-     *
-     * Works on `node` as well as the browser.
-     *
-     * Usage on nodejs
-     * ---------------
-     *
-     *      var instrumenter = new require('istanbul'.Instrumenter(),
-     *          changed = instrumenter.instrumentSync('function meaningOfLife() { return 42; }', 'filename.js');
-     *
-     * Usage in a browser
-     * ------------------
-     *
-     * Load `esprima.js`, `escodegen.js` and `instrumenter.js` (this file) using `script` tags or other means.
-     *
-     * Create an instrumenter object as:
-     *
-     *      var instrumenter = new Instrumenter(),
-     *          changed = instrumenter.instrumentSync('function meaningOfLife() { return 42; }', 'filename.js');
-     *
-     * Aside from demonstration purposes, it is unclear why you would want to instrument code in a browser.
-     *
-     * @class Instrumenter
-     * @constructor
-     * @param {Object} options Optional. Configuration options.
-     * @param {String} [options.coverageVariable] the global variable name to use for
-     *      tracking coverage. Defaults to `__coverage__`
-     * @param {Boolean} [options.embedSource] whether to embed the source code of every
-     *      file as an array in the file coverage object for that file. Defaults to `false`
-     * @param {Boolean} [options.preserveComments] whether comments should be preserved in the output. Defaults to `false`
-     * @param {Boolean} [options.noCompact] emit readable code when set. Defaults to `false`
-     * @param {Boolean} [options.esModules] whether the code to instrument contains uses es
-     *      imports or exports.
-     * @param {Boolean} [options.noAutoWrap] do not automatically wrap the source in
-     *      an anonymous function before covering it. By default, code is wrapped in
-     *      an anonymous function before it is parsed. This is done because
-     *      some nodejs libraries have `return` statements outside of
-     *      a function which is technically invalid Javascript and causes the parser to fail.
-     *      This construct, however, works correctly in node since module loading
-     *      is done in the context of an anonymous function.
-     *
-     * Note that the semantics of the code *returned* by the instrumenter does not change in any way.
-     * The function wrapper is "unwrapped" before the instrumented code is generated.
-     * @param {Object} [options.codeGenerationOptions] an object that is directly passed to the `escodegen`
-     *      library as configuration for code generation. The `noCompact` setting is not honored when this
-     *      option is specified
-     * @param {Boolean} [options.debug] assist in debugging. Currently, the only effect of
-     *      setting this option is a pretty-print of the coverage variable. Defaults to `false`
-     * @param {Boolean} [options.walkDebug] assist in debugging of the AST walker used by this class.
-     *
-     */
     function Instrumenter(options, filename) {
         this.opts = options || {
             debug: false,
@@ -411,7 +333,6 @@ var processor = require('./processing');
             TryStatement: [ this.paranoidHandlerCheck, this.coverStatement],
             VariableDeclaration: this.coverStatement,
             IfStatement: [ this.ifBlockConverter, this.coverStatement, this.ifBranchInjector ],
-            // IfStatement: [ ], // ALICE -  above doubles the counter ?? but looks more correct
             ForStatement: [ this.skipInit, this.loopBlockConverter, this.coverStatement ],
             ForInStatement: [ this.skipLeft, this.loopBlockConverter, this.coverStatement ],
             ForOfStatement: [ this.skipLeft, this.loopBlockConverter, this.coverStatement ],
@@ -429,22 +350,10 @@ var processor = require('./processing');
             MetaProperty: this.coverMetaProperty,
         }, this.extractCurrentHint, this, this.opts.walkDebug);
 
-        //unit testing purposes only
-        // if (this.opts.backdoor && this.opts.backdoor.omitTrackerSuffix) {
-        //     this.omitTrackerSuffix = true;
-        // } // ALICE -
     }
 
     Instrumenter.prototype = {
-        /**
-         * synchronous instrumentation method. Throws when illegal code is passed to it
-         * @method instrumentSync
-         * @param {String} code the code to be instrumented as a String
-         * @param {String} filename Optional. The name of the file from which
-         *  the code was read. A temporary filename is generated when not specified.
-         *  Not specifying a filename is only useful for unit tests and demonstrations
-         *  of this library.
-         */
+
         instrumentSync: function (code, filename) {
             var program;
 
@@ -468,9 +377,6 @@ var processor = require('./processing');
                 console.log('Failed to parse file: ' + filename);
                 throw e;
             }
-            // if (this.opts.preserveComments) {
-            //     program = ESPGEN.attachComments(program, program.comments, program.tokens);
-            // } CRAIG
 
             if (!this.opts.noAutoWrap) {
                 program = {
@@ -519,17 +425,7 @@ var processor = require('./processing');
                 }
             }
         },
-        /**
-         * synchronous instrumentation method that instruments an AST instead.
-         * @method instrumentASTSync
-         * @param {String} program the AST to be instrumented
-         * @param {String} filename Optional. The name of the file from which
-         *  the code was read. A temporary filename is generated when not specified.
-         *  Not specifying a filename is only useful for unit tests and demonstrations
-         *  of this library.
-         *  @param {String} originalCode the original code corresponding to the AST,
-         *  used for embedding the source into the coverage object
-         */
+
         instrumentASTSync: function (program, filename, originalCode) {
             var usingStrict = false,
                 codegenOptions,
@@ -549,7 +445,7 @@ var processor = require('./processing');
                 branchMap: {}
             };
             this.currentState = {
-                trackerVar: generateTrackerVar(filename, this.omitTrackerSuffix), // ALICE -
+                trackerVar: generateTrackerVar(filename, this.omitTrackerSuffix),
                 func: 0,
                 branch: 0,
                 variable: 0,
@@ -566,41 +462,16 @@ var processor = require('./processing');
                 usingStrict = true;
             }
             this.walker.startWalk(program);
-            // codegenOptions = this.opts.codeGenerationOptions || { format: { compact: !this.opts.noCompact }}; // ALICE -  (makes code compact..cant read)
-            // codegenOptions.comment = this.opts.preserveComments; // ALICE -
 
-            // ADD SETUP AST TO PROGRAM // ALICE -
             var setupAst = ESP.parse(processor.setup());
             program.body.unshift(setupAst);
 
             generated = ESPGEN.generate(program, codegenOptions);
             preamble = this.getPreamble(originalCode || '', usingStrict);
 
-            // if (generated.map && generated.code) {
-            //     lineCount = preamble.split(/\r\n|\r|\n/).length;
-            //     // offset all the generated line numbers by the number of lines in the preamble
-            //     for (i = 0; i < generated.map._mappings._array.length; i += 1) {
-            //         generated.map._mappings._array[i].generatedLine += lineCount;
-            //     }
-            //     this.sourceMap = generated.map;
-            //     generated = generated.code;
-            // } // ALICE -
-
             return preamble + '\n' + generated + '\n';
         },
-        /**
-         * Callback based instrumentation. Note that this still executes synchronously in the same process tick
-         * and calls back immediately. It only provides the options for callback style error handling as
-         * opposed to a `try-catch` style and nothing more. Implemented as a wrapper over `instrumentSync`
-         *
-         * @method instrument
-         * @param {String} code the code to be instrumented as a String
-         * @param {String} filename Optional. The name of the file from which
-         *  the code was read. A temporary filename is generated when not specified.
-         *  Not specifying a filename is only useful for unit tests and demonstrations
-         *  of this library.
-         * @param {Function(err, instrumentedCode)} callback - the callback function
-         */
+
         instrument: function (code, filename, callback) {
 
             if (!callback && typeof filename === 'function') {
@@ -613,26 +484,11 @@ var processor = require('./processing');
                 callback(ex);
             }
         },
-        /**
-         * returns the file coverage object for the code that was instrumented
-         * just before calling this method. Note that this represents a
-         * "zero-coverage" object which is not even representative of the code
-         * being loaded in node or a browser (which would increase the statement
-         * counts for mainline code).
-         * @method lastFileCoverage
-         * @return {Object} a "zero-coverage" file coverage object for the code last instrumented
-         * by this instrumenter
-         */
+
         lastFileCoverage: function () {
             return this.coverState;
         },
-        /**
-         * returns the source map object for the code that was instrumented
-         * just before calling this method.
-         * @method lastSourceMap
-         * @return {Object} a source map object for the code last instrumented
-         * by this instrumenter
-         */
+
         lastSourceMap: function () {
             return this.sourceMap;
         },
@@ -694,14 +550,6 @@ var processor = require('./processing');
             coverState = this.opts.debug ? JSON.stringify(this.coverState, undefined, 4) : JSON.stringify(this.coverState);
             code = [
                 "%STRICT%"
-                // "var %VAR% = (Function('return this'))();",
-                // "if (!%VAR%.%GLOBAL%) { %VAR%.%GLOBAL% = {}; }",
-                // "%VAR% = %VAR%.%GLOBAL%;",
-                // "if (!(%VAR%['%FILE%'])) {",
-                // "   %VAR%['%FILE%'] = %OBJECT%;",
-                // "}",
-                // "%VAR% = %VAR%['%FILE%'];"
-                // ALICE -  its required for 'use strict' to appear already, but dont ant all other garbage from coverage
             ].join("\n")
                 .replace(/%STRICT%/g, replacer(strictLine))
                 .replace(/%VAR%/g, replacer(tracker))
@@ -841,35 +689,16 @@ var processor = require('./processing');
 
                 sName = this.statementName(node.loc);
 
-                // BLOCK
-                // OLD
-                // var toPrint = astgen.variable('console.log("craigs-tracker-var-s:, ' + this.theFilename + '", ' + JSON.stringify(ESPGEN.generate(node).toString()) + ')');
-                // if (node.type === 'IfStatement') {
-                //     toPrint = astgen.variable('console.log("craigs-tracker-var-f:, ' + this.theFilename + '", ' + JSON.stringify('(' +ESPGEN.generate(node.test).toString()+ ')' ) + ')');
-                // }
-                // NEW
-                // var toPrint = astgen.variable('var test = (function() { try { throw new Error("boo"); } catch(e) { console.log(e.stack); } })();');
                 var toPrint = astgen.variable(processor.aliceTrackerStatement(this.theFilename, ESPGEN.generate(node).toString() ));
                 if (node.type === 'IfStatement') {
                     toPrint = astgen.variable(processor.aliceTrackerStatement(this.theFilename, '(' + ESPGEN.generate(node.test).toString() + ')'));
                 }
-                // if (node.type === 'CallExpression') {
-                //     console.log('HAPPENED');
-                //     // toPrint = astgen.variable(processing.aliceTrackerStatement(this.theFilename, '(CRAIG) ' + ESPGEN.generate(node).toString() ));
-                // }
 
                 incrStatementCount = astgen.statement(
-                    // astgen.postIncrement(
-                        // astgen.subscript(
-                            // astgen.dot(astgen.variable(this.currentState.trackerVar), astgen.variable('s')),
-                            toPrint
-                            // astgen.stringLiteral(sName)
-                        // )
-                    // )
+                  toPrint
                 );
 
                 this.splice(incrStatementCount, node, walker);
-                // ALICE -  other statements use this i think...
             }
         },
 
@@ -884,8 +713,7 @@ var processor = require('./processing');
             incrStatementCount = astgen.statement(
                 astgen.postIncrement(
                     astgen.subscript(
-                        // astgen.dot(astgen.variable(this.currentState.trackerVar), astgen.variable('s')),
-                        astgen.variable('craigs-tracker-var-s2'),
+                        astgen.variable('tracker-var-s2'),
                         astgen.stringLiteral(sName)
                     )
                 )
@@ -937,22 +765,7 @@ var processor = require('./processing');
             if (blockBody.length > 0 && this.isUseStrictExpression(blockBody[0])) {
                 popped = blockBody.shift();
             }
-            // console.log(JSON.stringify(ESPGEN.generate(body).toString()));
 
-            // ALICE -  - PRINTS FUNCTION
-            // blockBody.unshift(
-            //     astgen.statement(
-            //         // astgen.postIncrement(
-            //             // astgen.subscript(
-            //                 // astgen.dot(astgen.variable(this.currentState.trackerVar), astgen.variable('f')),
-            //                 // BLOCK
-            //                 // astgen.variable('console.log("craigs-tracker-var-f:, ' + this.theFilename + '", ' + JSON.stringify(ESPGEN.generate(body).toString()) + ')')
-            //                 astgen.variable(processing.aliceTrackerStatement(this.theFilename, JSON.stringify(ESPGEN.generate(body).toString())))
-            //                 // astgen.stringLiteral(id)
-            //             // )
-            //         // ) // ALICE -  removed so doesnt include incrementer
-            //     )
-            // );
             if (popped) {
                 blockBody.unshift(popped);
             }
@@ -977,39 +790,7 @@ var processor = require('./processing');
         },
 
         branchIncrementExprAst: function (varName, branchIndex, node, down) {
-            // var ret = astgen.postIncrement(
-                // astgen.subscript(
-                    // astgen.subscript(
-                        // astgen.dot(astgen.variable(this.currentState.trackerVar), astgen.variable('b')),
-                        // astgen.stringLiteral(varName)
-                    // ),
-                    // astgen.numericLiteral(branchIndex)
-                // ),
-                // down
-            // );
-            // return ret; // ALICE -  removed so doesnt increment
-
-            // BLOCK
-            // NEW...
-            // if (node) {
-            //     if (node.test) {
-            //         return astgen.variable(processing.aliceTrackerStatement(this.theFilename, ESPGEN.generate(node.test).toString()));
-            //     } else {
-            //         // NOT NEEDED as prints block again but in { }
-            //         // return astgen.variable(processing.aliceTrackerStatement(this.theFilename, JSON.stringify('//a ' + ESPGEN.generate(node).toString())));
-            //         return astgen.variable('""');
-            //     }
-            // } else {
-            //     return astgen.variable('""');
-            // }
-            // DONT THINK ITS USED
             return astgen.variable('""');
-            // OLD
-            // if (node) {
-                // return astgen.variable('console.log("craigs-tracker-var-b-ok:, ' + this.theFilename + '", ' + JSON.stringify(ESPGEN.generate(node).toString()) + ')')
-            // } else {
-            //     return astgen.variable('console.log("craigs-tracker-var-b-fail: ' + this.theFilename + ' NO NODE")')
-            // }
         },
 
         locationsForNodes: function (nodes) {
@@ -1036,7 +817,6 @@ var processor = require('./processing');
                 thenBody = node.consequent.body,
                 elseBody = node.alternate.body,
                 child;
-            // console.log('caller A');
             thenBody.unshift(astgen.statement(this.branchIncrementExprAst(bName, 0, node.consequent)));
             elseBody.unshift(astgen.statement(this.branchIncrementExprAst(bName, 1, node.alternate)));
             if (ignoreThen) { child = node.consequent; child.preprocessor = this.startIgnore; child.postprocessor = this.endIgnore; }
@@ -1058,7 +838,6 @@ var processor = require('./processing');
             bName = this.branchName('switch', walker.startLineForNode(node), this.locationsForNodes(cases));
             for (i = 0; i < cases.length; i += 1) {
                 cases[i].branchLocation = this.branchLocationFor(bName, i);
-                // console.log('caller B');
                 cases[i].consequent.unshift(astgen.statement(this.branchIncrementExprAst(bName, i)));
             }
         },
@@ -1072,7 +851,6 @@ var processor = require('./processing');
         },
 
         conditionalBranchInjector: function (node, walker) {
-          // console.log('caller C');
             var bName = this.branchName('cond-expr', walker.startLineForNode(node), this.locationsForNodes([ node.consequent, node.alternate ])),
                 ast1 = this.branchIncrementExprAst(bName, 0),
                 ast2 = this.branchIncrementExprAst(bName, 1);
@@ -1119,7 +897,6 @@ var processor = require('./processing');
             );
             for (i = 0; i < leaves.length; i += 1) {
                 tuple = leaves[i];
-                // console.log('caller D');
                 tuple.parent[tuple.property] = astgen.sequence(this.branchIncrementExprAst(bName, i), tuple.node);
                 tuple.node.preprocessor = this.maybeAddSkip(this.branchLocationFor(bName, i));
             }
