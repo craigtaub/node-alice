@@ -14,7 +14,6 @@ var writeFile = function(fileAndContents) {
  var expressCaller = 'express/lib/router/layer.js';
  var reactRouterCaller = 'react-router/lib/match';
  var reactCaller = 'node_modules/react/lib';
- // console.log('WRITE FILE', fileAndContents); // FOR DEBUGGING
 
  function buildHtml(body) {
    var header = '<h1>Alice Analyzer</h1>';
@@ -38,8 +37,9 @@ var writeFile = function(fileAndContents) {
          }
 
          if ((!!parent.match(expressCaller) === true) ||
-            (!!parent.match(reactCaller) === true) ||
-            (!!parent.match(reactRouterCaller) === true)) {
+             (!!parent.match(reactCaller) === true) ||
+             (!!parent.match(reactRouterCaller) === true) ||
+             (!!parent.match(value.filename) === true)) {
              stack.push(build(value));
          } else {
              return recurse(stack, value, parent);
@@ -89,7 +89,7 @@ var writeFile = function(fileAndContents) {
    nest+= 10;
    value.forEach(function(value, key) { // key.toString()
      body+= '<div id="' + iterationIndex + '-parent">';
-        body+= '<div id="item-' + iterationIndex + '" style="border: solid black 2px; padding: 2px; margin-bottom: 40px; margin-left: ' + nest + 'px">';
+        body+= '<div id="item-' + iterationIndex + '" style="border: solid black 2px; padding: 2px; margin-bottom: 20px; margin-left: ' + nest + 'px">';
             body+= '<span>Filename: ' + value.filename + '</span>';
             body+= ' [ <span onClick="toggleItem(\'item-' + iterationIndex + '-content\');">Toggle</span> ]';
             body+= '<div id="item-' + iterationIndex + '-content" style="display:none;">';
@@ -115,7 +115,7 @@ var writeFile = function(fileAndContents) {
 
    // right hand side
    body+='<script>function toggleItem(theId) { var theElement = document.getElementById(theId); toggle(theElement); }</script>';
-   body+='<script>function toggleAll() { for (var i = 0; i < document.getElementById("right-content").children.length; i++ ) { var item = document.getElementById("item-" + i + "-content"); if (item && item.style) { toggle(item); }}}</script>';
+   body+='<script>function toggleAll(length) { for (var i = 0; i < length; i++ ) { toggleItem("item-" + i + "-content"); } }</script>';
 
    // left hand side
    body+= '<script>function toggleItems() { reset(); var args = [].slice.call(arguments); var length = args[0]; args.shift(); toggleParents(length, args); }</script>';
@@ -156,7 +156,7 @@ var writeFile = function(fileAndContents) {
 
  // Right hand list
  body+= '<div id="right-content" style="width: 70%; float: right;">';
- body+= ' [ <span onClick="toggleAll();">Toggle All</span> ]';
+ body+= ' [ <span onClick="toggleAll(' + leftIndex + ');">Toggle All</span> ]';
 
 
  // Iterate over object.
