@@ -7,21 +7,10 @@ A (node based) tool which renders an visualization of the call stack tree(s) dur
 
 Nested chains in the call stack get displayed in their nested chain. i.e.
 
-    file-a
-    - contents
-        file-a.b
-        - contents
-            file-a.c
-            - contents
-        file-a.b
-        - contents
-    file-b
-    - contents
-    file-c
-    ...
+![alt tag](/imgs/analyser.png)
 
 It displays the file names and the exact lines of code (them and only them) which were executed.
-Defaults to just showing the filename to give the user the option to show/hide a file names code.
+Defaults to just showing the file name to give the user the option to show/hide a file names code.
 
 ## Example Usage
 
