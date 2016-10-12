@@ -12,7 +12,8 @@ var currentDirectory = __dirname;
 var writeFile = function(fileAndContents) {
  var fs = require('fs');
  var expressCaller = 'express/lib/router/layer.js';
- var reactCaller = 'react-router/lib/match';
+ var reactRouterCaller = 'react-router/lib/match';
+ var reactCaller = 'node_modules/react/lib';
  // console.log('WRITE FILE', fileAndContents); // FOR DEBUGGING
 
  function buildHtml(body) {
@@ -37,7 +38,8 @@ var writeFile = function(fileAndContents) {
          }
 
          if ((!!parent.match(expressCaller) === true) ||
-             (!!parent.match(reactCaller) === true)) {
+            (!!parent.match(reactCaller) === true) ||
+            (!!parent.match(reactRouterCaller) === true)) {
              stack.push(build(value));
          } else {
              return recurse(stack, value, parent);
@@ -48,13 +50,15 @@ var writeFile = function(fileAndContents) {
      return stack;
  }
  function recurse(stack, value, parent) {
-   if (stack[stack.length-1]) {
+   if (stack.length > 0 && stack[stack.length-1]) {
      if (!!parent.match(stack[stack.length-1].filename) === true) {
          stack[stack.length-1].children.push(build(value))
      } else {
          var currentItemChildren = stack[stack.length-1].children;
          return recurse(currentItemChildren, value, parent);
      }
+   } else {
+     stack.push(build(value)); // stack must be empty, push to new.
    }
  }
  function build(value) {
