@@ -12,6 +12,7 @@ var currentDirectory = __dirname;
 var writeFile = function(fileAndContents) {
  var fs = require('fs');
  var expressCaller = 'express/lib/router/layer.js';
+ var reactCaller = 'react-router/lib/match';
  // console.log('WRITE FILE', fileAndContents); // FOR DEBUGGING
 
  function buildHtml(body) {
@@ -35,7 +36,8 @@ var writeFile = function(fileAndContents) {
              parent = stackArray[4].trim();
          }
 
-         if (!!parent.match(expressCaller) === true) {
+         if ((!!parent.match(expressCaller) === true) ||
+             (!!parent.match(reactCaller) === true)) {
              stack.push(build(value));
          } else {
              return recurse(stack, value, parent);
@@ -82,8 +84,8 @@ var writeFile = function(fileAndContents) {
    var body = '';
    nest+= 10;
    value.forEach(function(value, key) { // key.toString()
-     body+= '<div id="' + iterationIndex + '-parent"  style="">';
-        body+= '<div id="item-' + iterationIndex + '" style="border: solid black; margin-bottom: 40px; margin-left: ' + nest + 'px">';
+     body+= '<div id="' + iterationIndex + '-parent">';
+        body+= '<div id="item-' + iterationIndex + '" style="border: solid black 2px; padding: 2px; margin-bottom: 40px; margin-left: ' + nest + 'px">';
             body+= '<span>Filename: ' + value.filename + '</span>';
             body+= ' [ <span onClick="toggleItem(\'item-' + iterationIndex + '-content\');">Toggle</span> ]';
             body+= '<div id="item-' + iterationIndex + '-content" style="display:none;">';
@@ -141,7 +143,7 @@ var writeFile = function(fileAndContents) {
  body+= '<span>Filename Filter</span> <span onClick="reset(' + leftIndex + ');">[ Reset ]</span>';
  for (var prop in listOfFilenames) {
      var values = listOfFilenames[prop];
-     body+= '<div style="border: solid black;margin-bottom: 40px;">';
+     body+= '<div style="border: solid black 2px; padding: 2px;">';
        body+= '<span>' + prop + '</span>';
        body+= ' [ <span onClick="toggleItems(' + leftIndex + ', ' + values.toString() + ');">Toggle</span> ]';
      body+= '</div>';
@@ -154,7 +156,7 @@ var writeFile = function(fileAndContents) {
 
 
  // Iterate over object.
- var nest = 0;
+ var nest = -10;
  var iterationIndex = 0;
  body+= iterationContainer(newFileAndContents, nest);
  body+= '</div>';

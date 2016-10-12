@@ -10,7 +10,7 @@ const UserStore = {
       if (previousContents === contents) {
         return; // remove iteration
       }
-      if (previousFilename === filename) {
+      if (previousFilename === filename && _data[index]) {
           _data[index].contents.push(contents);
       } else {
         _data.push({'filename': filename, 'contents': [contents], 'stack': stack});
