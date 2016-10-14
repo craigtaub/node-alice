@@ -11,9 +11,7 @@ var currentDirectory = __dirname;
 
 var writeFile = function(fileAndContents) {
  var fs = require('fs');
- var expressCaller = 'express/lib/router/layer.js';
- var reactRouterCaller = 'react-router/lib/match';
- var reactCaller = 'node_modules/react/lib';
+ var nodeModules = 'node_modules';
 
  function buildHtml(body) {
    var header = '<h1>Alice Analyzer</h1>';
@@ -36,9 +34,7 @@ var writeFile = function(fileAndContents) {
              parent = stackArray[4].trim();
          }
 
-         if ((!!parent.match(expressCaller) === true) ||
-             (!!parent.match(reactCaller) === true) ||
-             (!!parent.match(reactRouterCaller) === true) ||
+         if ((!!parent.match(nodeModules) === true) ||
              (!!parent.match(value.filename) === true)) {
              stack.push(build(value));
          } else {
