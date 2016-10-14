@@ -35,6 +35,8 @@ var writeFile = function(fileAndContents) {
          }
 
          if ((!!parent.match(nodeModules) === true) ||
+             (!!parent.match('emitTwo') == true) && (!!parent.match('events.js') == true) || // Node http
+             (!!parent.match('Server.emit') == true) && (!!parent.match('events.js') == true) || // Node http
              (!!parent.match(value.filename) === true)) {
              stack.push(build(value));
          } else {
@@ -80,12 +82,14 @@ var writeFile = function(fileAndContents) {
     })
  }
 
+ var coloursArray = {0: 'lightgreen', 10: 'lightblue', 20: 'orange', 30: 'lightgrey', 40: 'red'};
  function iterationContainer(value, nest) {
    var body = '';
    nest+= 10;
-   value.forEach(function(value, key) { // key.toString()
+   value.forEach(function(value, key) {
+     var backgroundColor = coloursArray[nest] || coloursArray[40];
      body+= '<div id="' + iterationIndex + '-parent">';
-        body+= '<div id="item-' + iterationIndex + '" style="border: solid black 2px; padding: 2px; margin-bottom: 20px; margin-left: ' + nest + 'px">';
+        body+= '<div id="item-' + iterationIndex + '" style="background-color: ' + backgroundColor + ';border: solid black 2px; padding: 2px; margin-bottom: 20px; margin-left: ' + nest + 'px">';
             body+= '<span>Filename: ' + value.filename + '</span>';
             body+= ' [ <span onClick="toggleItem(\'item-' + iterationIndex + '-content\');">Toggle</span> ]';
             body+= '<div id="item-' + iterationIndex + '-content" style="display:none;">';
