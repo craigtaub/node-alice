@@ -44,12 +44,7 @@ If you used <b>babel-node CLI</b> you must define a _.babelrc_ or _"babel": {}_ 
 This is because node-alice uses a require-hook and babel checks up the tree for .babelrc (not down), so will not have any presets/plugins set for it. Help can be found https://babeljs.io/docs/usage/babelrc/.
 
 
-## Future Feature:
+## Future features:
  - Add a Stats section (longest call stack, number of new ticks).
  - Web Sockets so each new request can reload the "request call stack tree" page.
 
-## Developing on the tool:
-
-    #npm link node-alice
-    #alias node-alice="node ./node_modules/node-alice/index"
-    #node-alice entry-file.js
