@@ -201,7 +201,7 @@ var writeFile = function(fileAndContents) {
  body+= '</div>';
  body+= '</div>';
 
- fs.writeFileSync(process.cwd() + '/node-alice.html', buildHtml(body));
+ fs.writeFileSync(process.cwd() + '/alice-analyser.html', buildHtml(body));
 }
 
 function setup() {
