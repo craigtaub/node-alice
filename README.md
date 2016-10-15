@@ -3,20 +3,19 @@ Down the rabbit hole...
 
 ## What is it?
 
-A (node based) tool which renders an visualization of the call stack tree(s) during the entire lifetime of a request (e.g. `/home`)
-
-Nested chains in the call stack get displayed in their nested chain. i.e.
+A (node based) tool which renders an visualization of the call stack tree(s) during the entire lifetime of a request. Basically it shows every line of code executed during the request, and by what. 
 
 ![alt tag](/imgs/analyser.png)
 
-It displays the file names and the exact lines of code (them and only them) which were executed.
+Defaults to just showing the file name to give the user the option to show/hide a file names code.
 
 ![alt tag](/imgs/toggled.png)
 
-Defaults to just showing the file name to give the user the option to show/hide a file names code.
 
 ## Why?
-To help understand and learn (and perhaps debug) exactly what runs and from where with your application. You can observe the code running in real-time.
+To help understand and learn (and perhaps debug) exactly what runs and from where with your application. You can observe the code which is running in real-time. 
+
+Of course server-side debuggers (e.g. _iron-node_ ,node debug) can show you similar information, but node-alice requires no code statements or additional clicking and produces an easy to read and follow tree. You can jump straight to the area you are interested in.
 
 ## Usage
     1. npm install -g node-alice
@@ -26,15 +25,15 @@ To help understand and learn (and perhaps debug) exactly what runs and from wher
     5. open alice-analyser.html
 
 ## Features:
- - Toggle all open or closed
- - Filter by file name
- - Toggle filtered file names open or closed
+ - Toggle all file contents open/closed
+ - Filter by any file name
+ - Toggle filtered file name open/closed
 
 ## Keep in mind
-  1. Any parent file it doesnt recognise will be places at the top level (i.e. express/react/react-router etc.)
+  1. Any parent file it does not recognise will be places at the top level (i.e. express/react/react-router etc.)
   2. Any use of iterations may print repetitive code, as it represents exactly what is run.
   3. Promises run in a new event tick so they will always appear at the top level.
-  4. Can't really be used with Webpack, the CLI command must be run agains the entry js file.
+  4. Can't really be used with Webpack, the CLI command must be run against the entry js file.
 
 
 ## Using with Babel
