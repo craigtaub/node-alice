@@ -4,7 +4,6 @@ function aliceTrackerStatement(filename, node) {
 
    var getStack = '(function() { try { throw new Error(); } catch(e) { return e.stack; } })().toString()';
    return 'singleton.add("'+ filename+ '", '+ JSON.stringify(node.toString()) + ', ' + getStack + ');';
-   // return 'console.log("'+ filename+ '", '+ JSON.stringify(node.toString()) +');';
 }
 
 var currentDirectory = __dirname;
@@ -14,11 +13,12 @@ var writeFile = function(fileAndContents) {
  var nodeModules = 'node_modules';
 
  function buildHtml(body) {
-   var header = '<h1>Alice Analyzer</h1>';
+   var header = '';
 
-   return '<!DOCTYPE html><html>'
-        + '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">'
-        + '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">'
+   return '<!DOCTYPE html><title>Alice Analyser</title><html>'
+        // might need integrity SHA
+        + '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">'
+        + '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">'
         + '<header>' + header + '</header><body style="margin:20px;">' + body + '</body></html>';
  };
 
@@ -84,7 +84,6 @@ var writeFile = function(fileAndContents) {
     })
  }
 
- // var coloursArray = {0: 'lightgreen', 10: 'lightblue', 20: 'orange', 30: 'lightgrey', 40: 'red'};
  function iterationContainer(value, nest) {
    var body = '';
    nest+= 10;
@@ -96,6 +95,9 @@ var writeFile = function(fileAndContents) {
           backgroundColor = 'alert-success';
           break;
        case 10:
+          backgroundColor = 'alert-info';
+          break;
+       case 20:
           backgroundColor = 'alert-warning';
           break;
        default:
@@ -103,13 +105,11 @@ var writeFile = function(fileAndContents) {
           break;
      }
 
-    //  var backgroundColor = coloursArray[nest] || coloursArray[40];
-     body+= '<div id="' + iterationIndex + '-parent">'; // background-color: ' + backgroundColor + ';border: solid black 2px; padding: 2px; margin-bottom: 20px;
+     body+= '<div id="' + iterationIndex + '-parent">';
         body+= '<div class="alert ' + backgroundColor + '" id="item-' + iterationIndex + '" style="margin-left: ' + nest + 'px">';
             body+= '<span><b>' + value.filename + ' </b></span>';
-            // body+= ' [ <span onClick="toggleItem(\'item-' + iterationIndex + '-content\');">Toggle</span> ]';
             body+= '<button style="float: right; margin-top: -7px;" onClick="toggleItem(\'item-' + iterationIndex + '-content\');" type="button" class="btn btn-default">Toggle</button>'
-            body+= '<div id="item-' + iterationIndex + '-content" style="display:none;">';
+            body+= '<div id="item-' + iterationIndex + '-content" style="padding-top: 20px; display:none;">';
             value.contents.forEach(function(value, key) {
                body+= '<p>' + value + '</p>';
             });
@@ -159,35 +159,46 @@ var writeFile = function(fileAndContents) {
  // iterate over new data as not always accurate using old set.
  buildFilterIteration(newFileAndContents);
 
+ body+= '<div class="panel panel-default">';
+ body+= '<div class="panel-heading">Welcome to the <b>Alice Analyser</b></div>';
+ body+= '<div class="panel-body">';
+
  // Left hand list
  body+= '<div id="left-content" style="width: 27%; float: left; word-wrap: break-word;">';
  body+= '<ul class="list-group">';
- body+= '<h4>Filename Filter</h4>';
- // body+= '<span onClick="reset(' + leftIndex + ');">[ Reset ]</span>';
- body+= '<button onClick="reset(' + leftIndex + ');" type="button" class="btn btn-default">Reset</button>';
+ body+= '<h4>Filename Filter:</h4>';
+ body+= '<button style="margin-bottom: 15px;" onClick="reset(' + leftIndex + ');" type="button" class="btn btn-default">Reset</button>';
  for (var prop in listOfFilenames) {
      var values = listOfFilenames[prop];
-     body+= '<li class="list-group-item">';
+     body+= '<li style="background-color: #f7f7f9;" class="list-group-item">';
      body+= '<div style="padding: 2px;">';
        body+= '<span>' + prop + ' </span>';
-      //  body+= ' [ <span onClick="toggleItems(' + leftIndex + ', ' + values.toString() + ');">Toggle</span> ]';
       body+= '<button style="float: right; margin-top: -7px;" onClick="toggleItems(' + leftIndex + ', ' + values.toString() + ');" type="button" class="btn btn-default">Toggle</button>'
      body+= '</div>';
      body+= '</li>';
  };
  body+= '</ul>';
+
+ body+= '<h4>Colour key:</h4>';
+ body+= '<div style="margin-bottom: 5px" class="alert alert-success">Top level - called by an unknown parent (i.e. express/react/react-router etc.)</div>';
+ body+= '<div style="margin-bottom: 5px" class="alert alert-info">1 level nesting</div>';
+ body+= '<div style="margin-bottom: 5px" class="alert alert-warning">2 levels nesting</div>';
+ body+= '<div style="margin-bottom: 5px" class="alert alert-danger">3+ level nesting</div>';
+
  body+= '</div>';
 
  // Right hand list
  body+= '<div id="right-content" style="width: 70%; float: right;">';
  // body+= ' [ <span onClick="toggleAll(' + leftIndex + ');">Toggle All</span> ]';
- body+= '<button onClick="toggleAll(' + leftIndex + ');" type="button" class="btn btn-default">Toggle All</button>'
+ body+= '<button style="margin-bottom: 15px;" onClick="toggleAll(' + leftIndex + ');" type="button" class="btn btn-default">Toggle All</button>'
 
 
  // Iterate over object.
  var nest = -10;
  var iterationIndex = 0;
  body+= iterationContainer(newFileAndContents, nest);
+ body+= '</div>';
+ body+= '</div>';
  body+= '</div>';
 
  fs.writeFileSync(process.cwd() + '/node-alice.html', buildHtml(body));
