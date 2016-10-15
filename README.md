@@ -15,7 +15,7 @@ Defaults to just showing the file name to give the user the option to show/hide 
 ## Why?
 To help understand and learn (and perhaps debug) exactly what runs and from where with your application. You can observe the code which is running in real-time. 
 
-Of course server-side debuggers (e.g. _iron-node_ ,node debug) can show you similar information, but node-alice requires no code statements or additional clicking and produces an easy to read and follow tree. You can jump straight to the area you are interested in.
+Of course server-side debuggers (e.g. _iron-node_, node debug) can show you similar information, but node-alice requires no code statements or additional clicking and produces an easy to read and follow tree. You can jump straight to the area you are interested in.
 
 ## Usage
     1. npm install -g node-alice
