@@ -19,10 +19,11 @@ Defaults to just showing the file name to give the user the option to show/hide 
 To help understand and learn (and perhaps debug) exactly what runs and from where with your application. You can observe the code running in real-time.
 
 ## Usage
-    1. node-alice <entry-file>.js
-    2. // open your app in the browser
-    3. // turn the app off via <ctrl+c>
-    4. open node-alice.html
+    1. npm install -g node-alice
+    2. node-alice <entry-file>.js
+    3. // open your app in the browser
+    4. // turn the app off via <ctrl+c>
+    5. open alice-analyser.html
 
 ## Features:
  - Toggle all open or closed
