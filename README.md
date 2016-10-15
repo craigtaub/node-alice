@@ -10,6 +10,9 @@ Nested chains in the call stack get displayed in their nested chain. i.e.
 ![alt tag](/imgs/analyser.png)
 
 It displays the file names and the exact lines of code (them and only them) which were executed.
+
+![alt tag](/imgs/toggled.png)
+
 Defaults to just showing the file name to give the user the option to show/hide a file names code.
 
 ## Example Usage
