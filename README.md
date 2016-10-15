@@ -34,9 +34,10 @@ This is because node-alice uses a require-hook and babel checks up the tree for 
 As its storing exactly what code is executed, if you use a transpiler (e.g. Babel) it will show the post-compiled code.
 
 ## Keep in mind
-  1. Any use of iterations may print repetitive code, as it represents exactly what is run.
-  2. Promises run in a new event tick so they will always appear at the top level.
-  3. Can't really be used with Webpack, the CLI command must be run agains the entry js file.
+  1. Any parent it doesnt recognise will be places at the top level (i.e. express/react/react-router etc.)
+  2. Any use of iterations may print repetitive code, as it represents exactly what is run.
+  3. Promises run in a new event tick so they will always appear at the top level.
+  4. Can't really be used with Webpack, the CLI command must be run agains the entry js file.
 
 ## Features:
  - Toggle all open or closed
