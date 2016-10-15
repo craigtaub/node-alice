@@ -108,7 +108,7 @@ var writeFile = function(fileAndContents) {
      body+= '<div id="' + iterationIndex + '-parent">';
         body+= '<div class="alert ' + backgroundColor + '" id="item-' + iterationIndex + '" style="margin-left: ' + nest + 'px">';
             body+= '<span><b>' + value.filename + ' </b></span>';
-            body+= '<button style="float: right; margin-top: -7px;" onClick="toggleItem(\'item-' + iterationIndex + '-content\');" type="button" class="btn btn-default">Toggle</button>'
+            body+= '<button style="float: right; margin-top: -7px;" onClick="toggleItem(\'item-' + iterationIndex + '-content\');" type="button" class="btn btn-default">Toggle content</button>'
             body+= '<div id="item-' + iterationIndex + '-content" style="padding-top: 20px; display:none;">';
             value.contents.forEach(function(value, key) {
                body+= '<p>' + value + '</p>';
@@ -144,11 +144,7 @@ var writeFile = function(fileAndContents) {
  var body = '';
 
  // Reformat Data
- // console.log('-----fileAndContents-----');
- // console.log(fileAndContents);
  var newFileAndContents = reformat(fileAndContents);
- // console.log('-----newFileAndContents-----');
- // console.log(newFileAndContents);
 
  // setup function
  body+= setupFunctions(body);
@@ -165,19 +161,15 @@ var writeFile = function(fileAndContents) {
 
  // Left hand list
  body+= '<div id="left-content" style="width: 27%; float: left; word-wrap: break-word;">';
- body+= '<ul class="list-group">';
- body+= '<h4>Filename Filter:</h4>';
- body+= '<button style="margin-bottom: 15px;" onClick="reset(' + leftIndex + ');" type="button" class="btn btn-default">Reset</button>';
+
+ body+= '<h4>Filename filter:</h4>';
+ body+= '<p><button onClick="reset(' + leftIndex + ');" type="button" class="btn btn-default">Reset</button></p>';
+ body+= '<div class="btn-group-vertical" role="group">';
  for (var prop in listOfFilenames) {
      var values = listOfFilenames[prop];
-     body+= '<li style="background-color: #f7f7f9;" class="list-group-item">';
-     body+= '<div style="padding: 2px;">';
-       body+= '<span>' + prop + ' </span>';
-      body+= '<button style="float: right; margin-top: -7px;" onClick="toggleItems(' + leftIndex + ', ' + values.toString() + ');" type="button" class="btn btn-default">Toggle</button>'
-     body+= '</div>';
-     body+= '</li>';
+      body+= '<button onClick="toggleItems(' + leftIndex + ', ' + values.toString() + ');" type="button" class="btn btn-default">' + prop + '</button>'
  };
- body+= '</ul>';
+ body+= '</div>';
 
  body+= '<h4>Colour key:</h4>';
  body+= '<div style="margin-bottom: 5px" class="alert alert-success">Top level - called by an unknown parent (i.e. express/react/react-router etc.)</div>';
@@ -189,8 +181,7 @@ var writeFile = function(fileAndContents) {
 
  // Right hand list
  body+= '<div id="right-content" style="width: 70%; float: right;">';
- // body+= ' [ <span onClick="toggleAll(' + leftIndex + ');">Toggle All</span> ]';
- body+= '<button style="margin-bottom: 15px;" onClick="toggleAll(' + leftIndex + ');" type="button" class="btn btn-default">Toggle All</button>'
+ body+= '<button style="margin-bottom: 15px;" onClick="toggleAll(' + leftIndex + ');" type="button" class="btn btn-default">Toggle all content</button>'
 
 
  // Iterate over object.

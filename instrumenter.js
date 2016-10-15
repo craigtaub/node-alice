@@ -10,13 +10,11 @@ var processor = require('./processing');
         crypto = isNode ? require('crypto') : null,
         LEADER_WRAP = '(function () { ',
         TRAILER_WRAP = '\n}());',
-        COMMENT_RE = /^\s*istanbul\s+ignore\s+(if|else|next)(?=\W|$)/,
         astgen,
         preconditions,
         cond,
         isArray = Array.isArray;
 
-    /* istanbul ignore if: untestable */
     if (!isArray) {
         isArray = function (thing) { return thing &&  Object.prototype.toString.call(thing) === '[object Array]'; };
     }
@@ -29,7 +27,6 @@ var processor = require('./processing');
             'Array does not implement push': [].push,
             'Array does not implement unshift': [].unshift
         };
-        /* istanbul ignore next: untestable */
         for (cond in preconditions) {
             if (preconditions.hasOwnProperty(cond)) {
                 if (!preconditions[cond]) { throw new Error(cond); }
@@ -124,7 +121,6 @@ var processor = require('./processing');
     };
 
     for (nodeType in SYNTAX) {
-        /* istanbul ignore else: has own property */
         if (SYNTAX.hasOwnProperty(nodeType)) {
             SYNTAX[nodeType] = { name: nodeType, children: SYNTAX[nodeType] };
         }
@@ -180,7 +176,6 @@ var processor = require('./processing');
             return;
         }
         children = SYNTAX[type].children;
-        /* istanbul ignore if: guard */
         if (node.walking) { throw new Error('Infinite regress: Custom walkers may NOT call walker.apply(node)'); }
         node.walking = true;
 
@@ -196,7 +191,6 @@ var processor = require('./processing');
             for (walkFnIndex = 0; walkFnIndex < walkerFn.length; walkFnIndex += 1) {
                 isLast = walkFnIndex === walkerFn.length - 1;
                 ret = walker.apply(ret, walkerFn[walkFnIndex]);
-                /*istanbul ignore next: paranoid check */
                 if (ret.type !== type && !isLast) {
                     throw new Error('Only the last walker is allowed to change the node type: [type was: ' + type + ' ]');
                 }
@@ -235,7 +229,6 @@ var processor = require('./processing');
                     node[childType] = childArray;
                 } else {
                     assignNode = walker.apply(childNode, null, pathElement);
-                    /*istanbul ignore if: paranoid check */
                     if (isArray(assignNode.prepend)) {
                         throw new Error('Internal error: attempt to prepend statements in disallowed (non-array) context');
                     } else {
@@ -283,11 +276,11 @@ var processor = require('./processing');
         },
 
         startLineForNode: function (node) {
-            return node && node.loc && node.loc.start ? node.loc.start.line : /* istanbul ignore next: guard */ null;
+            return node && node.loc && node.loc.start ? node.loc.start.line : null;
         },
 
         ancestor: function (n) {
-            return this.path.length > n - 1 ? this.path[this.path.length - n] : /* istanbul ignore next: guard */ null;
+            return this.path.length > n - 1 ? this.path[this.path.length - n] : null;
         },
 
         parent: function () {
@@ -397,13 +390,6 @@ var processor = require('./processing');
             }
             for (i = 0; i < comments.length; i += 1) {
                 comment = comments[i];
-                /* istanbul ignore else: paranoid check */
-                if (comment && comment.value && comment.range && isArray(comment.range)) {
-                    groups = String(comment.value).match(COMMENT_RE);
-                    if (groups) {
-                        ret.push({ type: groups[1], start: comment.range[0], end: comment.range[1] });
-                    }
-                }
             }
             return ret;
         },
@@ -509,17 +495,14 @@ var processor = require('./processing');
 
             obj = coverState.statementMap;
             for (k in obj) {
-                /* istanbul ignore else: has own property */
                 if (obj.hasOwnProperty(k)) { fixer(obj[k]); }
             }
             obj = coverState.fnMap;
             for (k in obj) {
-                /* istanbul ignore else: has own property */
                 if (obj.hasOwnProperty(k)) { fixer(obj[k].loc); }
             }
             obj = coverState.branchMap;
             for (k in obj) {
-                /* istanbul ignore else: has own property */
                 if (obj.hasOwnProperty(k)) {
                     locations = obj[k].locations;
                     for (i = 0; i < locations.length; i += 1) {
@@ -592,7 +575,6 @@ var processor = require('./processing');
             // if someone is using an older esprima on the browser
             // convert handlers array to single handler attribute
             // containing its first element
-            /* istanbul ignore next */
             if (!node.handler && node.handlers) {
                 node.handler = node.handlers[0];
             }
@@ -667,7 +649,6 @@ var processor = require('./processing');
 
             if (this.isUseStrictExpression(node)) {
                 grandParent = walker.ancestor(2);
-                /* istanbul ignore else: difficult to test */
                 if (grandParent) {
                     if ((grandParent.node.type === SYNTAX.FunctionExpression.name ||
                         grandParent.node.type === SYNTAX.FunctionDeclaration.name)  &&
@@ -691,7 +672,7 @@ var processor = require('./processing');
 
                 var toPrint = astgen.variable(processor.aliceTrackerStatement(this.theFilename, ESPGEN.generate(node).toString() ));
                 if (node.type === 'IfStatement') {
-                    toPrint = astgen.variable(processor.aliceTrackerStatement(this.theFilename, '(' + ESPGEN.generate(node.test).toString() + ')'));
+                    toPrint = astgen.variable(processor.aliceTrackerStatement(this.theFilename, 'if (' + ESPGEN.generate(node.test).toString() + ')'));
                 }
 
                 incrStatementCount = astgen.statement(
@@ -734,7 +715,7 @@ var processor = require('./processing');
                 ignoring = !!this.currentState.ignoring,
                 name = node.id ? node.id.name : '(anonymous_' + id + ')',
                 clone = function (attr) {
-                    var obj = location[attr] || /* istanbul ignore next */ {};
+                    var obj = location[attr] || {};
                     return { line: obj.line, column: obj.column };
                 };
             this.coverState.fnMap[id] = {

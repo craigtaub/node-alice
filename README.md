@@ -1,19 +1,17 @@
 # Node Alice
 Down the rabbit hole...
 
-## What is it?
-
-A (node based) tool which renders an visualization of the call stack tree(s) during the entire lifetime of a request. Basically it shows every line of code executed during the request, and by what. 
+A (node based) tool which renders an visualization of the call stack during the entire lifetime of a request. Basically it shows every line of code executed during the request, and by what.
 
 ![alt tag](/imgs/analyser.png)
 
-Defaults to just showing the file name to give the user the option to show/hide a file names code.
+Alice defaults to just showing the file name to give the user the option to show/hide that files executed code.
 
 ![alt tag](/imgs/toggled.png)
 
 
 ## Why?
-To help understand and learn (and perhaps debug) exactly what runs and from where with your application. You can observe the code which is running in real-time. 
+To help understand and learn (and perhaps debug) exactly what runs and from where with your application. You can observe the code which is running in real-time.
 
 Of course server-side debuggers (e.g. _iron-node_, node debug) can show you similar information, but node-alice requires no code statements or additional clicking and produces an easy to read and follow tree. You can jump straight to the area you are interested in.
 
@@ -47,4 +45,3 @@ This is because node-alice uses a require-hook and babel checks up the tree for 
 ## Future features:
  - Add a Stats section (longest call stack, number of new ticks).
  - Web Sockets so each new request can reload the "request call stack tree" page.
-
