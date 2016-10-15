@@ -24,24 +24,25 @@ To help understand and learn (and perhaps debug) exactly what runs and from wher
     3. // turn the app off via <ctrl+c>
     4. open node-alice.html
 
-## Using with Babel
-If you used babel-node CLI you must define a .babelrc or "babel": {} block in your package.json in order for node-alice to run. Without the correct presets and plugins your app wont work. As a side-note I find it important to know what my applications use from Babel anyway.
-
-This is because node-alice uses a require-hook and babel checks up the tree for .babelrc (not down), so will not have any presets/plugins set for it. Help can be found https://babeljs.io/docs/usage/babelrc/.
-
-## Using a Transpiler
-As its storing exactly what code is executed, if you use a transpiler (e.g. Babel) it will show the post-compiled code.
-
-## Keep in mind
-  1. Any parent it doesnt recognise will be places at the top level (i.e. express/react/react-router etc.)
-  2. Any use of iterations may print repetitive code, as it represents exactly what is run.
-  3. Promises run in a new event tick so they will always appear at the top level.
-  4. Can't really be used with Webpack, the CLI command must be run agains the entry js file.
-
 ## Features:
  - Toggle all open or closed
  - Filter by file name
  - Toggle filtered file names open or closed
+
+## Keep in mind
+  1. Any parent file it doesnt recognise will be places at the top level (i.e. express/react/react-router etc.)
+  2. Any use of iterations may print repetitive code, as it represents exactly what is run.
+  3. Promises run in a new event tick so they will always appear at the top level.
+  4. Can't really be used with Webpack, the CLI command must be run agains the entry js file.
+
+
+## Using with Babel
+As its storing exactly what code is executed, if you use a transpiler (e.g. Babel) it will show the post-compiled code.
+
+If you used <b>babel-node CLI</b> you must define a _.babelrc_ or _"babel": {}_ block in your _package.json_ in order for node-alice to run. Without the correct _presets_ and _plugins_ your app wont work (as a side-note I find it important/useful to know what my applications uses from Babel anyway).
+
+This is because node-alice uses a require-hook and babel checks up the tree for .babelrc (not down), so will not have any presets/plugins set for it. Help can be found https://babeljs.io/docs/usage/babelrc/.
+
 
 ## Future Feature:
  - Web Sockets so each new request can reload the "request call stack tree" page.
