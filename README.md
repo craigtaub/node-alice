@@ -45,6 +45,7 @@ This is because node-alice uses a require-hook and babel checks up the tree for 
 
 
 ## Future Feature:
+ - Add a Stats section (longest call stack, number of new ticks).
  - Web Sockets so each new request can reload the "request call stack tree" page.
 
 ## Developing on the tool:
