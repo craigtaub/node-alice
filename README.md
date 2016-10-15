@@ -15,10 +15,6 @@ It displays the file names and the exact lines of code (them and only them) whic
 
 Defaults to just showing the file name to give the user the option to show/hide a file names code.
 
-## Example Usage
-
-![alt tag](/imgs/example-usage.gif)
-
 ## Why?
 To help understand and learn (and perhaps debug) exactly what runs and from where with your application. You can observe the code running in real-time.
 
