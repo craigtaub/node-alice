@@ -1,6 +1,6 @@
 {
   "name": "node-alice",
-  "version": "0.7.0",
+  "version": "1.0.0",
   "description": "Get a visualization of the call stack during the lifetime of a request.",
   "main": "index.js",
   "author": "Craig Taub <craigtaub@gmail.com>",
