@@ -32,7 +32,6 @@ Of course server-side debuggers (e.g. _iron-node_, node debug) can show you simi
   3. Promises run in a new event tick so they will always appear at the top level.
   4. Can't really be used with Webpack, the CLI command must be run against the entry js file.
 
-
 ## Using with Babel
 As its storing exactly what code is executed, if you use a transpiler (e.g. Babel) it will show the post-compiled code.
 
@@ -40,6 +39,8 @@ If you used <b>babel-node CLI</b> you must define a _.babelrc_ or _"babel": {}_ 
 
 This is because node-alice uses a require-hook and babel checks up the tree for .babelrc (not down), so will not have any presets/plugins set for it. Help can be found https://babeljs.io/docs/usage/babelrc/.
 
+## Bugs
+Please feel free to create and issue or email me to let me know about any issues you discover. I would appreciate any help. Thanks
 
 ## Future features:
  - Add a Stats section (longest call stack, number of new ticks).
