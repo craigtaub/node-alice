@@ -9,6 +9,12 @@
     "type": "git",
     "url": "http://github.com/craigtaub/node-alice.git"
   },
+  "bugs": {
+    "url": "https://github.com/craigtaub/node-alice/issues"
+  },
+  "bin": {
+    "node-alice": "./index.js"
+  }
   "homepage": "http://github.com/craigtaub/node-alice",
   "keywords": [
     "static analysis",
