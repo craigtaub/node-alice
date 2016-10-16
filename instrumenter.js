@@ -34,6 +34,21 @@ var processor = require('./processing');
         }
     }
 
+    var currentDirectory = __dirname;
+
+    function setup() {
+     //  return 'var writeFile=' + writeFile + '; var currentDirectory="' + currentDirectory + '"; var singleton = require(currentDirectory + \'/singleton\'); process.on(\'exit\', function() { writeFile(singleton.getAll()); process.exit(); }); //setTimeout(function() { singleton.clearAll(); }, 100);';
+      return 'var writeFile=' + processor.writeFile + '; var currentDirectory="' + currentDirectory + '"; var singleton = require(currentDirectory + \'/singleton\'); if (!singleton.getListener()) { process.on(\'SIGINT\', function() { writeFile(singleton.getAll()); process.exit(); }); singleton.setListener(); } setTimeout(function() { if(!singleton.getReset()) { singleton.setReset(); singleton.clearAll(); } }, 100);';
+    }
+
+    function aliceTrackerStatement(filename, node) {
+       filename = filename.replace(process.cwd(), ''); // remove entire path
+       filename = filename.replace(/^\/|\/$/g, ''); // remove and leading slash
+
+       var getStack = '(function() { try { throw new Error(); } catch(e) { return e.stack; } })().toString()';
+       return 'singleton.add("'+ filename+ '", '+ JSON.stringify(node.toString()) + ', ' + getStack + ');';
+    }
+
     function generateTrackerVar(filename, omitSuffix) {
         return 'generateTrackerVar ran' + filename
     }
@@ -449,7 +464,7 @@ var processor = require('./processing');
             }
             this.walker.startWalk(program);
 
-            var setupAst = ESP.parse(processor.setup());
+            var setupAst = ESP.parse(setup());
             program.body.unshift(setupAst);
 
             generated = ESPGEN.generate(program, codegenOptions);
@@ -670,9 +685,9 @@ var processor = require('./processing');
 
                 sName = this.statementName(node.loc);
 
-                var toPrint = astgen.variable(processor.aliceTrackerStatement(this.theFilename, ESPGEN.generate(node).toString() ));
+                var toPrint = astgen.variable(aliceTrackerStatement(this.theFilename, ESPGEN.generate(node).toString() ));
                 if (node.type === 'IfStatement') {
-                    toPrint = astgen.variable(processor.aliceTrackerStatement(this.theFilename, 'if (' + ESPGEN.generate(node.test).toString() + ')'));
+                    toPrint = astgen.variable(aliceTrackerStatement(this.theFilename, 'if (' + ESPGEN.generate(node.test).toString() + ')'));
                 }
 
                 incrStatementCount = astgen.statement(

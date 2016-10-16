@@ -10,7 +10,16 @@
     "url": "http://github.com/craigtaub/node-alice.git"
   },
   "homepage": "http://github.com/craigtaub/node-alice",
-  "keywords": ["static analysis", "code analysis", "call stack", "call tree", "request call stack", "istanbul", "babel", "coverage"],
+  "keywords": [
+    "static analysis",
+    "code analysis",
+    "call stack",
+    "call tree",
+    "request call stack",
+    "istanbul",
+    "babel",
+    "coverage"
+  ],
   "dependencies": {
     "babel-register": "^6.14.0",
     "escodegen": "^1.8.1",
