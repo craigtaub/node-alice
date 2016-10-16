@@ -153,14 +153,21 @@ var writeFile = function(fileAndContents) {
   // Left hand list
   body+= '<div id="left-content" style="width: 27%; float: left; word-wrap: break-word;">';
 
-  body+= '<h4>Filename filter:</h4>';
-  body+= '<p><button onClick="reset(' + leftIndex + ');" type="button" class="btn btn-default">Reset</button></p>';
-  body+= '<div class="btn-group-vertical" role="group">';
+  body+= '<ul class="list-group">';
+  body+= '<h4>Filename Filter:</h4>';
+  body+= '<button style="margin-bottom: 15px;" onClick="reset(' + leftIndex + ');" type="button" class="btn btn-default">Reset</button>';
   for (var prop in listOfFilenames) {
      var values = listOfFilenames[prop];
-      body+= '<button onClick="toggleItems(' + leftIndex + ', ' + values.toString() + ');" type="button" class="btn btn-default">' + prop + '</button>'
+      body+= '<li style="background-color: #f7f7f9;" class="list-group-item">';
+        body+= '<div style="width:75%; padding: 5px;">';
+          body+= '<span>' + prop + ' </span>';
+        body+= '</div>';
+        body+= '<div style="width:25%">';
+          body+= '<button style="position: absolute; right: 10px; top: 10px;" onClick="toggleItems(' + leftIndex + ', ' + values.toString() + ');" type="button" class="btn btn-default">Toggle</button>'
+        body+= '</div>';
+      body+= '</li>';
   };
-  body+= '</div>';
+  body+= '</ul>';
 
   body+= '<h4>Colour key:</h4>';
   body+= '<div style="margin-bottom: 5px" class="alert alert-success">Top level - called by an unknown parent (i.e. express/react/react-router etc.)</div>';
