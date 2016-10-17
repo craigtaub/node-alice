@@ -19,9 +19,9 @@ Alice defaults to just showing the file name to give the user the option to show
     5. open alice-analyser.html
 
 ## Why?
-To help understand and learn (and perhaps debug) exactly what runs and from where with your application. Easily find any deep nesting and how often it is called. You can observe the code which is being run at real-time.
+To help understand and learn (and perhaps debug) exactly what runs and from where with your application. Easily find any deep nesting and how often it is called. You can observe the code which is being run at run-time.
 
-Of course server-side debuggers (e.g. _iron-node_, node debug) can show you similar information, but node-alice requires no code statements or additional clicking and produces an easy to read and follow tree. You can jump straight to the area you are interested in.
+Of course server-side debuggers (e.g. _iron-node_, node debug) can show you similar information, but Alice requires no code statements or additional clicking and produces an easy to read and follow tree. You can jump straight to the area you are interested in.
 
 ## Features:
  - Toggle all file contents open/closed
@@ -45,4 +45,4 @@ Please feel free to create an issue or email me to let me know about any bugs yo
 ## Future features:
  - Add a Stats section (longest call stack, number of new ticks, worse offender).
  - Web Sockets so each new request can reload the "request call stack tree" page.
- - Add whitelist to recognise common parents (React/react-router/Express/Node/Promises)
+ - Add whitelist to recognise common parents (e.g. React/react-router/Express/Node/Promises)
