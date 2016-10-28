@@ -2,6 +2,7 @@
   "name": "node-alice",
   "description": "Get a visualization of the call stack during the lifetime of a request.",
   "main": "index.js",
+  "version": "1.1.4",
   "author": "Craig Taub <craigtaub@gmail.com>",
   "license": "ISC",
   "repository": {
