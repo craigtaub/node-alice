@@ -13,7 +13,8 @@ var processor = require('./processing');
         astgen,
         preconditions,
         cond,
-        isArray = Array.isArray;
+        isArray = Array.isArray,
+        withExtension;
 
     if (!isArray) {
         isArray = function (thing) { return thing &&  Object.prototype.toString.call(thing) === '[object Array]'; };
@@ -36,8 +37,12 @@ var processor = require('./processing');
 
     var currentDirectory = __dirname;
 
-    function setup() {
+    function setup(withExtension) {
      //  return 'var writeFile=' + writeFile + '; var currentDirectory="' + currentDirectory + '"; var singleton = require(currentDirectory + \'/singleton\'); process.on(\'exit\', function() { writeFile(singleton.getAll()); process.exit(); }); //setTimeout(function() { singleton.clearAll(); }, 100);';
+
+      if (withExtension) {
+        return 'var writeFile=' + processor.writeFile + '; var currentDirectory="' + currentDirectory + '"; var singleton = require(currentDirectory + \'/singleton\'); if (!singleton.getListener()) {  singleton.setListener(); } setTimeout(function() { if(!singleton.getReset()) { singleton.setReset(); singleton.clearAll(); } }, 100);';
+      }
       return 'var writeFile=' + processor.writeFile + '; var currentDirectory="' + currentDirectory + '"; var singleton = require(currentDirectory + \'/singleton\'); if (!singleton.getListener()) { process.on(\'SIGINT\', function() { writeFile(singleton.getAll()); process.exit(); }); singleton.setListener(); } setTimeout(function() { if(!singleton.getReset()) { singleton.setReset(); singleton.clearAll(); } }, 100);';
     }
 
@@ -308,7 +313,7 @@ var processor = require('./processing');
         }
     };
 
-    function Instrumenter(options, filename) {
+    function Instrumenter(options, filename, withExtension) {
         this.opts = options || {
             debug: false,
             walkDebug: false,
@@ -321,6 +326,7 @@ var processor = require('./processing');
             esModules: false
         };
         this.theFilename = filename;
+        this.withExtension = withExtension;
 
         if (this.opts.esModules && !this.opts.noAutoWrap) {
             this.opts.noAutoWrap = true;
@@ -464,7 +470,7 @@ var processor = require('./processing');
             }
             this.walker.startWalk(program);
 
-            var setupAst = ESP.parse(setup());
+            var setupAst = ESP.parse(setup(this.withExtension));
             program.body.unshift(setupAst);
 
             generated = ESPGEN.generate(program, codegenOptions);
