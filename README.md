@@ -11,17 +11,31 @@ Alice defaults to just showing the file name to give the user the option to show
 
 ![alt tag](/imgs/toggled.png)
 
-## Usage
+## With Chrome Extension (much more fluid experience)
+
+### Setup
+    1. npm install -g node-alice
+    2. // install chrome extension at ....
+    3. node-alice <your-entry-file>.js --with-ext --port:<some-free-port>
+
+Without `--port` it will default to 8080. Any custom port set here must also be added into the Chrome Extension 'options' section.
+
+### Usage
+    1. // open your app in the browser
+    2. // Click the Chrome Extension
+
+You can immediately run a new request in the browser and the extension data will update when you open the Extension. Allowing for a much less clunky experience.
+
+## Without the Chrome Extension
+
+### Setup
     1. npm install -g node-alice
     2. node-alice <entry-file>.js
-    3. // open your app in the browser
-    4. // turn the app off via <ctrl+c>
-    5. open alice-analyser.html
 
-## Why?
-To help understand and learn (and perhaps debug) exactly what runs and from where with your application. Easily find any deep nesting and how often it is called. You can observe the code which is being run at run-time.
-
-Of course server-side debuggers (e.g. _iron-node_, node debug) can show you similar information, but Alice requires no code statements or additional clicking and produces an easy to read and follow tree. You can jump straight to the area you are interested in.
+### Usage
+    1. // open your app in the browser
+    2. // turn the app off via <ctrl+c>
+    3. open alice-analyser.html
 
 ## Features:
  - Toggle all file contents open/closed
@@ -29,6 +43,16 @@ Of course server-side debuggers (e.g. _iron-node_, node debug) can show you simi
  - Toggle filtered file name open/closed
 
 ## FAQ
+
+    Why would I use this tool?
+
+To help understand and learn (and perhaps debug) exactly what runs and from where with your application. Easily find any deep nesting and how often it is called. You can observe the code which is being run at run-time.
+
+    What is the benefit over other server-side debuggers?
+
+Of course tools like _iron-node_ and node debug can show you similar information, but Alice requires no code statements or additional/multiple clicking and produces an easy to read and follow tree in 1 click.
+
+
     Does it work if my app uses Babel?
 
 As its storing exactly what code is executed, if you use a transpiler (e.g. Babel) it will show the post-compiled code.
@@ -43,12 +67,11 @@ Any use of iterations may print repetitive code, as it represents exactly what i
 
     Can I use it with Webpack?
 
-Can't really be used with Webpack, the CLI command must be run against the entry js file.
+Can be used with Webpack but only if the Node CLI command is run against the entry js file (ideally with the Chrome Extension).
 
 ## Bugs/feedback
 Please feel free to create an [issue](https://github.com/craigtaub/node-alice/issues/new) or email me to let me know about any bugs you discover. I would appreciate any help. Thanks
 
-## Future features:
- - Add a Stats section (longest call stack, number of new ticks, worse offender).
- - Web Sockets so each new request can reload the "request call stack tree" page.
+## Comming Soon:
+ - Stats section (longest call stack, number of new ticks, worse offender).
  - Add whitelist to recognise common parents (e.g. React/react-router/Express/Node/Promises)
