@@ -14,9 +14,9 @@ Alice defaults to just showing the file name to give the user the option to show
 ## With Chrome Extension (much more fluid experience)
 
 ### Setup
-1. npm install -g node-alice
-2. // install chrome extension at ....
-3. node-alice <your-entry-file>.js --with-ext --port:<some-free-port>
+    1. npm install -g node-alice
+    2. // install chrome extension at ....
+    3. node-alice <your-entry-file>.js --with-ext --port:<some-free-port>
 
 Without `--port` it will default to 8080. Any custom port set here must also be added into the Chrome Extension 'options' section.
 
